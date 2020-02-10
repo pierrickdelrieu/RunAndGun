@@ -29,7 +29,7 @@ class World:
 
     def load_map(self, level_id):
         self.level_id = level_id
-        self.level = importlib.import_module(f"resources.levels.{self.level_id}")
+        self.level = importlib.import_module(f"resources.levels.{self.level_id}.map")
 
     def save_map(self):
         background = pg.Surface(self.screen_size())
@@ -49,7 +49,7 @@ class World:
                     (x, y)
                 )
 
-        pg.image.save(background, f"resources/levels/{self.level_id}.png")
+        pg.image.save(background, f"resources/levels/{self.level_id}/map.png")
 
     def screen_size(self):
         size = (self.tile_width * self.size_tiles_x_world, self.tile_height * self.size_tiles_y_world)

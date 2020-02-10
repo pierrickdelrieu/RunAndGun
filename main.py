@@ -8,6 +8,8 @@ def main():
         pg.mixer.pre_init(44100, 32, 2, 1024)
     pg.init()
 
+    level = 3
+
     screen = pg.display.set_mode(SCREENRECT.size)
 
     img = pg.transform.scale(
@@ -43,11 +45,11 @@ def main():
     ]
 
     background = World()
-    background.load_map(1)
+    background.load_map(level)
     background.save_map()
 
     background = pg.Surface(SCREENRECT.size)
-    background.blit(pg.image.load(f"resources/levels/1.png").convert_alpha(), (0, 0))
+    background.blit(pg.image.load(f"resources/levels/{level}/map.png").convert_alpha(), (0, 0))
     screen.blit(background, (0, 0))
     pg.display.flip()
 
