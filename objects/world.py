@@ -33,10 +33,13 @@ class World:
 
     def save_map(self):
         background = pg.Surface(self.screen_size())
-        background.blit(pg.image.load(f"resources/sprites/sky.png").convert_alpha(), (0, 0))
+        background.blit(
+            pg.image.load(f"resources/sprites/sky.png").convert_alpha(),
+            (0, 0)
+        )
 
-        x_max = int(self.screen_width / self.tile_width)
         y_max = int(self.screen_height / self.tile_height)
+        x_max = int(self.screen_width / self.tile_width)
 
         for i in range(0, y_max):
             for j in range(0, x_max):
@@ -48,6 +51,8 @@ class World:
                     self.tiles[item].render((x, y)),
                     (x, y)
                 )
+
+        pg.display.update()
 
         pg.image.save(background, f"resources/levels/{self.level_id}/map.png")
 

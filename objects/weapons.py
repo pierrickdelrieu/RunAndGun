@@ -34,7 +34,7 @@ class Bullet(pg.sprite.Sprite):
     def update(self):
         if self.X > self.pos[0] - 80:
             self.image = pg.transform.scale(
-                pg.image.load(f"resources/sprites/bullets/tomato.png").convert_alpha(),
+                pg.image.load(f"resources/sprites/effects/explosion.png").convert_alpha(),
                 (64, 64)
             )
         else:
@@ -43,8 +43,8 @@ class Bullet(pg.sprite.Sprite):
 
             self.rect.left, self.rect.top = self.X, self.Y
 
-            self.t += .05
-            print(self.X, self.Y, self.t)
+            self.t += .25
+            print(self.X, self.Y, self.t, self.pos[0] - self.X)
 
             # self.image = pg.transform.scale(
             #     pg.image.load(f"resources/sprites/bullets/tomato.png").convert_alpha(),

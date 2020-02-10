@@ -21,4 +21,4 @@ class Dirt(pg.sprite.Sprite):
 
     def render(self, pos):
         self.pos = pos
-        return self.tiles[random.randint(0, len(self.tiles) - 1)]
+        return random.choice(self.tiles)
