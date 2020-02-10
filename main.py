@@ -1,5 +1,6 @@
 from objects.constants import *
 from objects.player import Player, Cannon, Fuel
+from objects.world import World
 
 
 def main():
@@ -41,8 +42,11 @@ def main():
         text.render(f"Fuel: {Player.fuel}%", 0, (0, 0, 0))
     ]
 
+    background = World()
+    background.load_map(1)
+    background.save_map()
+
     background = pg.Surface(SCREENRECT.size)
-    background.blit(pg.image.load(f"resources/sprites/sky.png").convert_alpha(), (0, 0))
     background.blit(pg.image.load(f"resources/levels/1.png").convert_alpha(), (0, 0))
     screen.blit(background, (0, 0))
     pg.display.flip()
