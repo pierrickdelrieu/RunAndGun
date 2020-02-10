@@ -1,5 +1,6 @@
 from objects.constants import *
 from objects.player import Player, Cannon, Fuel
+from objects.weapons import Bullet
 from objects.world import World
 
 
@@ -7,8 +8,9 @@ def main():
     if pg.get_sdl_version()[0] == 2:
         pg.mixer.pre_init(44100, 32, 2, 1024)
     pg.init()
+    clock = pg.time.Clock()
 
-    level = 3
+    level = 1
 
     screen = pg.display.set_mode(SCREENRECT.size)
 
@@ -44,6 +46,15 @@ def main():
         text.render(f"Fuel: {Player.fuel}%", 0, (0, 0, 0))
     ]
 
+    img = pg.transform.scale(
+        pg.image.load(f"resources/sprites/bullets/tomato.png").convert_alpha(),
+        (16, 16)
+    )
+    Bullet.images = [
+        img
+    ]
+    Bullet.clock = clock
+
     background = World()
     background.load_map(level)
     background.save_map()
@@ -54,15 +65,16 @@ def main():
     pg.display.flip()
 
     all_sprites = pg.sprite.RenderUpdates()
-    clock = pg.time.Clock()
 
     Player.containers = all_sprites
     Cannon.containers = all_sprites
     Fuel.containers = all_sprites
+    Bullet.containers = all_sprites
 
     player = Player(screen.get_rect())
     cannon = Cannon(screen.get_rect())
     fuel = Fuel(screen.get_rect())
+    bullet = Bullet(screen.get_rect())
 
     while player.alive():
         for event in pg.event.get():
@@ -80,6 +92,7 @@ def main():
             cannon.move(direction)
 
         cannon.rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
+        bullet.update()
 
         floor = all_sprites.draw(screen)
         pg.display.update(floor)
