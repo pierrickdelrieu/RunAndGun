@@ -20,6 +20,7 @@ def main():
         ),
         img
     ]
+    Player.fuel = 100
 
     img = pg.transform.scale(
         pg.image.load(f"resources/sprites/cannon.png").convert_alpha(),
@@ -37,11 +38,12 @@ def main():
     text.set_italic(True)
     Fuel.fuel = 100
     Fuel.images = [
-        text.render(f"Fuel: 100%", 0, (0, 0, 0))
+        text.render(f"Fuel: {Player.fuel}%", 0, (0, 0, 0))
     ]
 
     background = pg.Surface(SCREENRECT.size)
-    background.blit(pg.image.load(f"resources/levels/1.png").convert(), (0, 0))
+    background.blit(pg.image.load(f"resources/sprites/sky.png").convert_alpha(), (0, 0))
+    background.blit(pg.image.load(f"resources/levels/1.png").convert_alpha(), (0, 0))
     screen.blit(background, (0, 0))
     pg.display.flip()
 
@@ -67,13 +69,14 @@ def main():
 
         if player.fuel > 0:
             direction = keystate[pg.K_RIGHT] - keystate[pg.K_LEFT]
-            aim = keystate[pg.K_UP] - keystate[pg.K_DOWN]
             player.move(direction)
-            cannon.move(direction, aim)
             fuel.move(direction, player.fuel)
+            cannon.move(direction)
 
-        dirty = all_sprites.draw(screen)
-        pg.display.update(dirty)
+        cannon.rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
+
+        floor = all_sprites.draw(screen)
+        pg.display.update(floor)
 
         pg.display.set_caption(f"Tank! - fps:{round(clock.get_fps())}")
 
@@ -84,4 +87,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        pg.quit()
+        quit()
