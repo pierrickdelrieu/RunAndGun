@@ -1,5 +1,6 @@
-import pygame as pg
 import random
+
+from objects.constants import *
 
 
 class Grass(pg.sprite.Sprite):
@@ -14,7 +15,7 @@ class Grass(pg.sprite.Sprite):
         for i in range(1, 7):
             self.tiles.append(
                 pg.transform.scale(
-                    pg.image.load(f"resources/sprites/grass{i}.png"),
+                    pg.image.load(f"{TILES_PATH}/grass{i}.png"),
                     (self.tile_width, self.tile_height)
                 )
             )

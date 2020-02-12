@@ -19,7 +19,8 @@ class Bullet(pg.sprite.Sprite):
                  screen_rect: pg.Rect,
                  velocity: float, x: float, y: float,
                  angle: int,
-                 damage: int):
+                 damage: int,
+                 adv: tuple):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
 
@@ -29,6 +30,8 @@ class Bullet(pg.sprite.Sprite):
         self.origin = (self.x, self.y)
         self.damage = damage
         self.angle = angle
+
+        self.adv = adv
 
         self.image = pg.transform.scale(
                 pg.image.load(self.images_path[0]).convert_alpha(),
@@ -48,7 +51,8 @@ class Bullet(pg.sprite.Sprite):
         self.vy = self.velocity * math.sin(math.radians(self.angle))
 
     def update(self):
-        if self.x > self.pos[0] - 80:
+        print(self.x, self.y, self.vx, self.vy, self.adv)
+        if self.adv[0] + 20 > self.x > self.adv[0] - 20 and self.adv[1] + 20 > self.y > self.adv[1] - 20:
             self.image = pg.transform.scale(
                 pg.image.load(f"resources/sprites/effects/explosion.png").convert_alpha(),
                 (64, 64)
@@ -75,10 +79,13 @@ class Bullet(pg.sprite.Sprite):
 
 
 class Tomato(Bullet):
+    damage = 10
+
     def __init__(self,
                  screen_rect: pg.Rect,
                  velocity: float, x: float, y: float,
-                 direction: int, angle: int):
-        super().__init__(screen_rect, velocity, x, y, angle if direction == 1 else 180 - angle, 10)
+                 direction: int, angle: int,
+                 adv: tuple):
+        super().__init__(screen_rect, velocity, x, y, angle if direction == 1 else 180 - angle, self.damage, adv)
 
         Bullet.images = [f"resources/sprites/bullets/tomato.png"]

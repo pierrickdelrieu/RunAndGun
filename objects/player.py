@@ -5,18 +5,20 @@ from .constants import TILE_WIDTH, TILE_HEIGHT
 
 class Player(pg.sprite.Sprite):
     fuel: int
+    life: int
     speed = 5
     bounce = 50
     gun_offset = -11
-    images = []
+    images = {}
+    angle = 0
 
     is_shooting: bool = False
 
-    def __init__(self, screen_rect, pos: tuple, facing):
+    def __init__(self, screen_rect, pos: tuple, facing: int):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
 
-        self.image = self.images[0 if facing == -1 else 1]
+        self.image = self.images.get(facing).get(self.angle)
         self.rect = self.image.get_rect(
             midbottom=((pos[1] + 1) * TILE_WIDTH, (pos[0] + 1) * TILE_HEIGHT)
         )
@@ -29,60 +31,27 @@ class Player(pg.sprite.Sprite):
         self.rect.move_ip(direction * self.speed, 0)
         self.rect = self.rect.clamp(self.screen_rect)
         if direction < 0:
-            self.image = self.images[0]
+            self.image = self.images.get(self.facing).get(self.angle)
             self.fuel -= 1
         elif direction > 0:
-            self.image = self.images[1]
+            self.image = self.images.get(self.facing).get(self.angle)
             self.fuel -= 1
-        self.rect.top = self.origtop - (self.rect.left // self.bounce % 2)
-
-
-class Cannon(pg.sprite.Sprite):
-    angle = 0
-    speed = 5
-    bounce = 50
-    gun_offset = -11
-    images = []
-
-    def __init__(self, screen_rect, pos: tuple, facing):
-        pg.sprite.Sprite.__init__(self, self.containers)
-        self.screen_rect = screen_rect
-
-        self.image = self.images[0 if facing == -1 else 1]
-        self.rect = self.image.get_rect(
-            midbottom=((pos[1] + 1) * TILE_WIDTH, (pos[0] + 1) * TILE_HEIGHT)
-        )
-        self.origtop = self.rect.top
-        self.facing = facing
-
-    def move(self, direction):
-        if direction:
-            self.facing = direction
-
-        self.rect.move_ip(direction * self.speed, 0)
-        self.rect = self.rect.clamp(self.screen_rect)
-
-        if direction < 0:
-            self.image = self.images[0]
-        elif direction > 0:
-            self.image = self.images[1]
-
         self.rect.top = self.origtop - (self.rect.left // self.bounce % 2)
 
     def rotate(self, angle):
-        if 71 > self.angle > -1:
-            if angle == -1 and self.angle == 0 or angle == 1 and self.angle == 70:
+        if 17 > self.angle > -5:
+            if angle == -1 and self.angle == -4 or angle == 1 and self.angle == 16:
                 return
-            self.angle += angle
-            # self.image = pg.transform.rotate(self.image, -self.angle)
+            self.angle += angle * 2
+            self.image = self.images.get(self.facing).get(self.angle)
 
     def get_pos(self):
-        pos = (self.rect.left, self.rect.top)
+        pos = (self.rect.left, self.rect.top + 10)
         return pos
 
 
-class Fuel(pg.sprite.Sprite):
-    fuel: int
+class Life(pg.sprite.Sprite):
+    life: int
     speed = 5
     images = []
 
@@ -100,21 +69,21 @@ class Fuel(pg.sprite.Sprite):
         self.font.set_bold(True)
         self.color = pg.Color('Green')
 
-    def move(self, direction, fuel):
+    def move(self, direction, life):
         self.rect.move_ip(direction * self.speed, 0)
         self.rect = self.rect.clamp(self.screen_rect)
 
-        self.fuel = fuel
-        if self.fuel == 0:
+        self.life = life
+        if self.life == 0:
             self.font.set_underline(True)
 
-        if self.fuel < 10:
+        if self.life < 10:
             self.color = pg.Color('Red')
-        elif self.fuel < 50:
+        elif self.life < 50:
             self.color = pg.Color('Orange3')
-        elif self.fuel < 75:
+        elif self.life < 75:
             self.color = pg.Color('Orange')
         self.update()
 
     def update(self):
-        self.image = self.font.render(f"Fuel: {self.fuel}%", 0, self.color)
+        self.image = self.font.render(f"Life: {self.life}%", 0, self.color)

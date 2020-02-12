@@ -1,8 +1,8 @@
 from objects.constants import *
-from objects.player import Player, Cannon, Fuel
+from objects.player import Player, Life
 from objects.weapons import Tomato
 from objects.world import World
-from objects.gui import Angle
+from objects.gui import Angle, Fuel
 
 
 def main():
@@ -12,40 +12,34 @@ def main():
     clock = pg.time.Clock()
 
     level = 1
-    turn = 1
+    turn = 2
 
     screen = pg.display.set_mode(SCREENRECT.size)
 
-    img = pg.transform.scale(
-        pg.image.load(f"resources/sprites/tank.png").convert_alpha(),
-        (72, (72 * 178) // 489)
-    )
-    Player.images = [
-        pg.transform.flip(
-            img,
+    img = {-1: {}, 1: {}}
+    for i in range(-4, 17, 2):
+        img[-1][i] = pg.transform.flip(
+            pg.transform.scale(
+                pg.image.load(f"resources/sprites/player/{i}.png").convert_alpha(),
+                (96, (96 * 215) // 631)
+            ),
             True, False
-        ),
-        img
-    ]
-    Player.fuel = 100
+        )
 
-    img = pg.transform.scale(
-        pg.image.load(f"resources/sprites/cannon.png").convert_alpha(),
-        (72, (72 * 178) // 489)
-    )
-    Cannon.images = [
-        pg.transform.flip(
-            img,
-            True, False
-        ),
-        img
-    ]
+        img[1][i] = pg.transform.scale(
+            pg.image.load(f"resources/sprites/player/{i}.png").convert_alpha(),
+            (96, (96 * 215) // 631)
+        )
+
+    Player.images = img
+    Player.life = 100
+    Player.fuel = 100
 
     text = pg.font.Font(None, 20)
     text.set_italic(True)
-    Fuel.fuel = 100
-    Fuel.images = [
-        text.render(f"Fuel: {Player.fuel}%", 0, (0, 0, 0))
+    Life.life = 100
+    Life.images = [
+        text.render(f"Life: {Player.life}%", 0, (0, 0, 0))
     ]
 
     img = pg.transform.scale(
@@ -55,7 +49,8 @@ def main():
     Tomato.images = [
         img
     ]
-    Tomato.clock = clock
+
+    Fuel.fuel = 100
 
     world = World()
     world.load_map(level)
@@ -69,30 +64,29 @@ def main():
     all_sprites = pg.sprite.RenderUpdates()
 
     Player.containers = all_sprites
-    Cannon.containers = all_sprites
-    Fuel.containers = all_sprites
+    Life.containers = all_sprites
     Tomato.containers = all_sprites
 
     Angle.containers = all_sprites
+    Fuel.containers = all_sprites
 
     player1 = Player(screen.get_rect(), world.level.players.get(1), 1)
     player2 = Player(screen.get_rect(), world.level.players.get(2), -1)
 
-    cannon1 = Cannon(screen.get_rect(), world.level.players.get(1), 1)
-    cannon2 = Cannon(screen.get_rect(), world.level.players.get(2), -1)
-
-    fuel1 = Fuel(screen.get_rect(), world.level.players.get(1))
-    fuel2 = Fuel(screen.get_rect(), world.level.players.get(2))
+    life1 = Life(screen.get_rect(), world.level.players.get(1))
+    life2 = Life(screen.get_rect(), world.level.players.get(2))
 
     angle_gui = Angle()
+    fuel_gui = Fuel()
 
     player = {
-        1: [player1, cannon1, fuel1],
-        2: [player2, cannon2, fuel2],
+        1: [player1, life1],
+        2: [player2, life2],
     }
 
     if pg.font:
         all_sprites.add(angle_gui)
+        all_sprites.add(fuel_gui)
 
     while player.get(turn)[0].alive():
         pg.display.set_caption(f"Tank! - fps:{round(clock.get_fps())}")
@@ -107,20 +101,21 @@ def main():
         if player.get(turn)[0].fuel > 0:
             direction = keystate[pg.K_RIGHT] - keystate[pg.K_LEFT]
             player.get(turn)[0].move(direction)
-            player.get(turn)[2].move(direction, player.get(turn)[0].fuel)
-            player.get(turn)[1].move(direction)
+            player.get(turn)[1].move(direction, player.get(turn)[0].life)
+            fuel_gui.fuel = player.get(turn)[0].fuel
 
         if not player.get(turn)[0].is_shooting:
-            player.get(turn)[1].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
-            angle_gui.angle = player.get(turn)[1].angle
+            player.get(turn)[0].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
+            angle_gui.angle = player.get(turn)[0].angle
 
             if keystate[pg.K_SPACE]:
                 player.get(turn)[0].is_shooting = True
                 tomato = Tomato(
                     screen.get_rect(),
-                    150, *player.get(turn)[1].get_pos(),
-                    player.get(turn)[1].facing,
-                    player.get(turn)[1].angle
+                    170, *player.get(turn)[0].get_pos(),
+                    player.get(turn)[0].facing,
+                    player.get(turn)[0].angle,
+                    player.get(turn % 2 + 1)[0].get_pos()
                 )
                 tomato.update()
 

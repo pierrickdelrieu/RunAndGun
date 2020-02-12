@@ -1,8 +1,7 @@
 import importlib
-import pygame as pg
 
 from .elements import *
-from .constants import TILE_WIDTH, TILE_HEIGHT
+from .constants import *
 
 
 class World:
@@ -35,7 +34,7 @@ class World:
     def save_map(self):
         background = pg.Surface(self.screen_size())
         background.blit(
-            pg.image.load(f"resources/sprites/sky.png").convert_alpha(),
+            pg.image.load(f"{TILES_PATH}/sky.png").convert_alpha(),
             (0, 0)
         )
 

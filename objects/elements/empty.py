@@ -1,4 +1,4 @@
-import pygame as pg
+from objects.constants import *
 
 
 class Empty(pg.sprite.Sprite):
@@ -10,7 +10,7 @@ class Empty(pg.sprite.Sprite):
         self.tile_width = tile_width
 
         self.tile = pg.transform.scale(
-            pg.image.load(f"resources/sprites/empty.png"),
+            pg.image.load(f"{TILES_PATH}/empty.png"),
             (self.tile_width, self.tile_height)
         )
 

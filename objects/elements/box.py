@@ -1,9 +1,10 @@
-import pygame as pg
 import random
+
+from objects.constants import *
 
 
 class Wall(pg.sprite.Sprite):
-    def __init__(self, tile_height, tile_width):
+    def __init__(self, tile_height: int, tile_width: int):
         super().__init__()
         self.pos = (0, 0)
 
@@ -11,7 +12,7 @@ class Wall(pg.sprite.Sprite):
         self.tile_width = tile_width
 
         self.tile = pg.transform.scale(
-            pg.image.load(f"resources/sprites/wall.jpg"),
+            pg.image.load(f"{TILES_PATH}/wall.jpg"),
             (self.tile_width, self.tile_height)
         )
 
@@ -21,7 +22,7 @@ class Wall(pg.sprite.Sprite):
 
 
 class Box(pg.sprite.Sprite):
-    def __init__(self, tile_height, tile_width):
+    def __init__(self, tile_height: int, tile_width: int):
         super().__init__()
         self.pos = (0, 0)
 
@@ -32,7 +33,7 @@ class Box(pg.sprite.Sprite):
         for i in range(1, 4):
             self.tiles.append(
                 pg.transform.scale(
-                    pg.image.load(f"resources/sprites/box{i}.png"),
+                    pg.image.load(f"{TILES_PATH}/box{i}.png"),
                     (self.tile_width, self.tile_height)
                 )
             )
