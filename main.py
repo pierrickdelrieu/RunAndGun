@@ -1,7 +1,8 @@
 from objects.constants import *
 from objects.player import Player, Cannon, Fuel
-from objects.weapons import Bullet
+from objects.weapons import Tomato
 from objects.world import World
+from objects.gui import Angle
 
 
 def main():
@@ -11,6 +12,7 @@ def main():
     clock = pg.time.Clock()
 
     level = 1
+    turn = 1
 
     screen = pg.display.set_mode(SCREENRECT.size)
 
@@ -50,14 +52,14 @@ def main():
         pg.image.load(f"resources/sprites/bullets/tomato.png").convert_alpha(),
         (16, 16)
     )
-    Bullet.images = [
+    Tomato.images = [
         img
     ]
-    Bullet.clock = clock
+    Tomato.clock = clock
 
-    background = World()
-    background.load_map(level)
-    background.save_map()
+    world = World()
+    world.load_map(level)
+    world.save_map()
 
     background = pg.Surface(SCREENRECT.size)
     background.blit(pg.image.load(f"resources/levels/{level}/map.png").convert_alpha(), (0, 0))
@@ -69,14 +71,31 @@ def main():
     Player.containers = all_sprites
     Cannon.containers = all_sprites
     Fuel.containers = all_sprites
-    Bullet.containers = all_sprites
+    Tomato.containers = all_sprites
 
-    player = Player(screen.get_rect())
-    cannon = Cannon(screen.get_rect())
-    fuel = Fuel(screen.get_rect())
-    bullet = Bullet(screen.get_rect())
+    Angle.containers = all_sprites
 
-    while player.alive():
+    player1 = Player(screen.get_rect(), world.level.players.get(1), 1)
+    player2 = Player(screen.get_rect(), world.level.players.get(2), -1)
+
+    cannon1 = Cannon(screen.get_rect(), world.level.players.get(1), 1)
+    cannon2 = Cannon(screen.get_rect(), world.level.players.get(2), -1)
+
+    fuel1 = Fuel(screen.get_rect(), world.level.players.get(1))
+    fuel2 = Fuel(screen.get_rect(), world.level.players.get(2))
+
+    angle_gui = Angle()
+
+    player = {
+        1: [player1, cannon1, fuel1],
+        2: [player2, cannon2, fuel2],
+    }
+
+    if pg.font:
+        all_sprites.add(angle_gui)
+
+    while player.get(turn)[0].alive():
+        pg.display.set_caption(f"Tank! - fps:{round(clock.get_fps())}")
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 return
@@ -85,21 +104,30 @@ def main():
         all_sprites.clear(screen, background)
         all_sprites.update()
 
-        if player.fuel > 0:
+        if player.get(turn)[0].fuel > 0:
             direction = keystate[pg.K_RIGHT] - keystate[pg.K_LEFT]
-            player.move(direction)
-            fuel.move(direction, player.fuel)
-            cannon.move(direction)
+            player.get(turn)[0].move(direction)
+            player.get(turn)[2].move(direction, player.get(turn)[0].fuel)
+            player.get(turn)[1].move(direction)
 
-        cannon.rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
-        bullet.update()
+        if not player.get(turn)[0].is_shooting:
+            player.get(turn)[1].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
+            angle_gui.angle = player.get(turn)[1].angle
+
+            if keystate[pg.K_SPACE]:
+                player.get(turn)[0].is_shooting = True
+                tomato = Tomato(
+                    screen.get_rect(),
+                    150, *player.get(turn)[1].get_pos(),
+                    player.get(turn)[1].facing,
+                    player.get(turn)[1].angle
+                )
+                tomato.update()
 
         floor = all_sprites.draw(screen)
         pg.display.update(floor)
 
-        pg.display.set_caption(f"Tank! - fps:{round(clock.get_fps())}")
-
-        clock.tick(30)
+        clock.tick(20)
 
     pg.time.wait(1000)
     pg.quit()

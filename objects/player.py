@@ -1,5 +1,7 @@
 import pygame as pg
 
+from .constants import TILE_WIDTH, TILE_HEIGHT
+
 
 class Player(pg.sprite.Sprite):
     fuel: int
@@ -8,15 +10,18 @@ class Player(pg.sprite.Sprite):
     gun_offset = -11
     images = []
 
-    def __init__(self, screen_rect):
+    is_shooting: bool = False
+
+    def __init__(self, screen_rect, pos: tuple, facing):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
 
-        self.image = self.images[0]
-
-        self.rect = self.image.get_rect(midbottom=self.screen_rect.midright)
+        self.image = self.images[0 if facing == -1 else 1]
+        self.rect = self.image.get_rect(
+            midbottom=((pos[1] + 1) * TILE_WIDTH, (pos[0] + 1) * TILE_HEIGHT)
+        )
         self.origtop = self.rect.top
-        self.facing = -1
+        self.facing = facing
 
     def move(self, direction):
         if direction:
@@ -39,16 +44,16 @@ class Cannon(pg.sprite.Sprite):
     gun_offset = -11
     images = []
 
-    def __init__(self, screen_rect):
+    def __init__(self, screen_rect, pos: tuple, facing):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
 
-        self.image = self.images[0]
-
-        self.rect = self.image.get_rect(midbottom=self.screen_rect.midright)
-
+        self.image = self.images[0 if facing == -1 else 1]
+        self.rect = self.image.get_rect(
+            midbottom=((pos[1] + 1) * TILE_WIDTH, (pos[0] + 1) * TILE_HEIGHT)
+        )
         self.origtop = self.rect.top
-        self.facing = -1
+        self.facing = facing
 
     def move(self, direction):
         if direction:
@@ -65,8 +70,15 @@ class Cannon(pg.sprite.Sprite):
         self.rect.top = self.origtop - (self.rect.left // self.bounce % 2)
 
     def rotate(self, angle):
-        self.angle += angle
-        self.image = pg.transform.rotate(self.image, -self.angle)
+        if 71 > self.angle > -1:
+            if angle == -1 and self.angle == 0 or angle == 1 and self.angle == 70:
+                return
+            self.angle += angle
+            # self.image = pg.transform.rotate(self.image, -self.angle)
+
+    def get_pos(self):
+        pos = (self.rect.left, self.rect.top)
+        return pos
 
 
 class Fuel(pg.sprite.Sprite):
@@ -74,14 +86,14 @@ class Fuel(pg.sprite.Sprite):
     speed = 5
     images = []
 
-    def __init__(self, screen_rect):
+    def __init__(self, screen_rect, pos: tuple):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
 
         self.image = self.images[0]
 
         self.rect = self.image.get_rect(
-            midbottom=(self.screen_rect.midright[0], self.screen_rect.midright[1] - 30)
+            midbottom=((pos[1] + 1) * TILE_WIDTH, (pos[0] + 1) * TILE_HEIGHT - 32)
         )
 
         self.font = pg.font.Font(None, 20)

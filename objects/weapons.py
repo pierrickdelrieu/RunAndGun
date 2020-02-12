@@ -4,55 +4,81 @@ import pygame as pg
 
 
 class Bullet(pg.sprite.Sprite):
-    images = []
-    t = 0
+    images_path = [f"resources/sprites/bullets/tomato.png"]
+    t = 1
     gravity = 9.81
-    angle = 30
-    velocity = 140
+    angle: int
+    velocity: float
 
-    def __init__(self, screen_rect):
+    damage: int
+
+    x: float
+    y: float
+
+    def __init__(self,
+                 screen_rect: pg.Rect,
+                 velocity: float, x: float, y: float,
+                 angle: int,
+                 damage: int):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
 
-        self.image = self.images[0]
+        self.velocity = velocity
+        self.x = x
+        self.y = y
+        self.origin = (self.x, self.y)
+        self.damage = damage
+        self.angle = angle
+
+        self.image = pg.transform.scale(
+                pg.image.load(self.images_path[0]).convert_alpha(),
+                (16, 16)
+            )
 
         self.rect = self.image.get_rect(
-            center=self.screen_rect.midleft
+            center=self.screen_rect.center
         )
 
         self.pos = pg.math.Vector2(
             self.screen_rect.midright[0], self.screen_rect.midright[1] - 30
         )
-        self.vel = pg.math.Vector2(0, -450)
         self.damage = 10
 
-        self.X = 30
-        self.Y = 30
         self.vx = self.velocity * math.cos(math.radians(self.angle))
         self.vy = self.velocity * math.sin(math.radians(self.angle))
 
     def update(self):
-        if self.X > self.pos[0] - 80:
+        if self.x > self.pos[0] - 80:
             self.image = pg.transform.scale(
                 pg.image.load(f"resources/sprites/effects/explosion.png").convert_alpha(),
                 (64, 64)
             )
         else:
-            self.X = self.vx * self.t
-            self.Y = 400 - (self.vy * self.t - (self.gravity / 2) * self.t * self.t)
 
-            self.rect.left, self.rect.top = self.X, self.Y
+            self.x = self.origin[0] + (self.vx * self.t)
+            self.y = self.origin[1] - (self.vy * self.t - (self.gravity / 2) * self.t * self.t)
 
-            self.t += .25
-            print(self.X, self.Y, self.t, self.pos[0] - self.X)
+            self.rect.left, self.rect.top = self.x, self.y
 
-            # self.image = pg.transform.scale(
-            #     pg.image.load(f"resources/sprites/bullets/tomato.png").convert_alpha(),
-            #     (
-            #         int(-(14 * self.t ** 2) / 9 + (28 * self.t) / 3 + 16),
-            #         int(-(14 * self.t ** 2) / 9 + (28 * self.t) / 3 + 16)
-            #     )
-            # )
+            self.t += .2
 
-        if self.rect.bottom <= 0:
+            self.image = pg.transform.scale(
+                pg.image.load(self.images_path[0]).convert_alpha(),
+                (
+                    int((1 / self.y) * 10000),
+                    int((1 / self.y) * 10000)
+                )
+            )
+
+        if 0 > self.x > self.screen_rect.right or self.y > self.screen_rect.bottom:
             self.kill()
+
+
+class Tomato(Bullet):
+    def __init__(self,
+                 screen_rect: pg.Rect,
+                 velocity: float, x: float, y: float,
+                 direction: int, angle: int):
+        super().__init__(screen_rect, velocity, x, y, angle if direction == 1 else 180 - angle, 10)
+
+        Bullet.images = [f"resources/sprites/bullets/tomato.png"]

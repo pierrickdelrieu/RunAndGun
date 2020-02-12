@@ -2,14 +2,15 @@ import importlib
 import pygame as pg
 
 from .elements import *
+from .constants import TILE_WIDTH, TILE_HEIGHT
 
 
 class World:
     level_id: int
 
     def __init__(self):
-        self.tile_width = 64
-        self.tile_height = 64
+        self.tile_width = TILE_WIDTH
+        self.tile_height = TILE_HEIGHT
 
         self.size_tiles_x_world = 28
         self.size_tiles_y_world = 14
