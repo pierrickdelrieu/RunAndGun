@@ -1,5 +1,7 @@
 import math
 
+from .constants import TILE_WIDTH, TILE_HEIGHT
+
 import pygame as pg
 
 
@@ -9,6 +11,7 @@ class Bullet(pg.sprite.Sprite):
     gravity = 9.81
     angle: int
     velocity: float
+    hit = False
 
     damage: int
 
@@ -39,7 +42,7 @@ class Bullet(pg.sprite.Sprite):
         self.images_path = images_path
         self.image = pg.transform.scale(
                 pg.image.load(self.images_path[0]).convert_alpha(),
-                (16, 16)
+                (32, 32)
             )
 
         self.t = .5 if self.angle < 90 else .2
@@ -48,24 +51,22 @@ class Bullet(pg.sprite.Sprite):
             center=self.screen_rect.center
         )
 
-        self.pos = pg.math.Vector2(
-            self.screen_rect.midright[0], self.screen_rect.midright[1] - 10
-        )
         self.damage = 10
 
         self.vx = self.velocity * math.cos(math.radians(self.angle))
         self.vy = self.velocity * math.sin(math.radians(self.angle))
 
     def update(self):
-        print(self.x, self.y, self.adv)
-        if (self.adv[0] + 96) > self.x > (self.adv[0] - 16) and (self.adv[1] + 144) > self.y > (self.adv[1] - 16):
+        print(self.x, self.y, self.adv, self.rect)
+        adv = pg.Rect(self.adv[0], self.adv[1], 128, 128)
+        if adv.colliderect(self.rect):
             self.image = pg.transform.scale(
                 pg.image.load(f"resources/sprites/effects/explosion.png").convert_alpha(),
                 (64, 64)
             )
-            return "Hit !"
+            self.vx, self.vy = 0, 0
+            self.hit = True
         else:
-
             self.x = self.origin[0] + (self.vx * self.t)
             self.y = self.origin[1] - (self.vy * self.t - (self.gravity / 2) * self.t * self.t)
 
@@ -73,13 +74,20 @@ class Bullet(pg.sprite.Sprite):
 
             self.t += .2
 
-            self.image = pg.transform.scale(
-                pg.image.load(self.images_path[0]).convert_alpha(),
-                (
-                    int((1 / self.y) * 10000),
-                    int((1 / self.y) * 10000)
-                )
-            )
+            # self.image = pg.transform.scale(
+            #     pg.image.load(self.images_path[0]).convert_alpha(),
+            #     (
+            #         int((1 / self.y) * 10000),
+            #         int((1 / self.y) * 10000)
+            #     )
+            # )
+
+        for tile in self.world:
+            rect = pg.Rect(tile[0], tile[1], TILE_WIDTH, TILE_HEIGHT)
+
+            if rect.colliderect(self.rect):
+                pg.time.wait(1000)
+                self.kill()
 
         if 0 > self.x > self.screen_rect.right or self.y > self.screen_rect.bottom:
             self.kill()

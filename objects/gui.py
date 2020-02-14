@@ -18,8 +18,8 @@ class Angle(pg.sprite.Sprite):
         self.image = self.font.render(text, 0, self.color)
 
 
-class Fuel(pg.sprite.Sprite):
-    fuel: int
+class Energy(pg.sprite.Sprite):
+    energy: int
     image: pg.Surface
 
     def __init__(self):
@@ -31,16 +31,16 @@ class Fuel(pg.sprite.Sprite):
         self.rect = self.image.get_rect().move(10, 50)
 
     def update(self):
-        text = f"Fuel: {self.fuel}%"
+        text = f"Energy: {self.energy}%"
 
-        if self.fuel == 0:
+        if self.energy == 0:
             self.font.set_underline(True)
 
-        if self.fuel < 10:
+        if self.energy < 10:
             self.color = pg.Color('Red')
-        elif self.fuel < 50:
+        elif self.energy < 50:
             self.color = pg.Color('Orange3')
-        elif self.fuel < 75:
+        elif self.energy < 75:
             self.color = pg.Color('Orange')
 
         self.image = self.font.render(text, 0, self.color)

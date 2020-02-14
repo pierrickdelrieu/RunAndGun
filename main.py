@@ -1,8 +1,8 @@
 from objects.constants import *
-from objects.player import Player, Arm, Life
+from objects.player import Player, Arm
 from objects.weapons import Tomato
 from objects.world import World
-from objects.gui import Angle, Fuel
+from objects.gui import Angle, Energy
 
 
 def main():
@@ -47,7 +47,7 @@ def main():
 
     Player.images = img
     Player.life = 100
-    Player.fuel = 10e10
+    Player.energy = 100e10
 
     img = {'patrick': {-1: {}, 1: {}}, 'bob': {-1: {}, 1: {}}}
     for i in range(-4, 15, 2):
@@ -70,10 +70,6 @@ def main():
 
     text = pg.font.Font(None, 20)
     text.set_italic(True)
-    Life.life = 100
-    Life.images = [
-        text.render(f"Life: {Player.life}%", 0, (0, 0, 0))
-    ]
 
     img = pg.transform.scale(
         pg.image.load(f"resources/sprites/bullets/tomato.png").convert_alpha(),
@@ -83,7 +79,7 @@ def main():
         img
     ]
 
-    Fuel.fuel = 100
+    Energy.energy = 100
 
     world = World()
     world.load_map(level)
@@ -98,11 +94,10 @@ def main():
 
     Player.containers = all_sprites
     Arm.containers = all_sprites
-    Life.containers = all_sprites
     Tomato.containers = all_sprites
 
     Angle.containers = all_sprites
-    Fuel.containers = all_sprites
+    Energy.containers = all_sprites
 
     player1 = Player(screen.get_rect(), world.level.players.get(1), 1, 'patrick')
     player2 = Player(screen.get_rect(), world.level.players.get(2), -1, 'bob')
@@ -110,15 +105,12 @@ def main():
     arm1 = Arm(screen.get_rect(), world.level.players.get(1), 1, 'patrick')
     arm2 = Arm(screen.get_rect(), world.level.players.get(2), -1, 'bob')
 
-    life1 = Life(screen.get_rect(), world.level.players.get(1))
-    life2 = Life(screen.get_rect(), world.level.players.get(2))
-
     angle_gui = Angle()
-    fuel_gui = Fuel()
+    fuel_gui = Energy()
 
     player = {
-        1: [player1, life1, arm1],
-        2: [player2, life2, arm2],
+        1: [player1, arm1],
+        2: [player2, arm2],
     }
 
     if pg.font:
@@ -135,17 +127,18 @@ def main():
         all_sprites.clear(screen, background)
         all_sprites.update()
 
-        if player.get(turn)[0].fuel > 0:
+        if player.get(turn)[0].energy > 0:
             direction = keystate[pg.K_RIGHT] - keystate[pg.K_LEFT]
-            player.get(turn)[0].move(direction)
-            player.get(turn)[1].move(direction, player.get(turn)[0].life)
-            player.get(turn)[2].move(direction)
-            fuel_gui.fuel = player.get(turn)[0].fuel
+
+            player.get(turn)[0].move(direction, world.hit_box())
+
+            player.get(turn)[1].move(direction)
+            fuel_gui.energy = player.get(turn)[0].energy
 
         if not player.get(turn)[0].is_shooting:
             # player.get(turn)[0].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
-            player.get(turn)[2].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
-            angle_gui.angle = player.get(turn)[2].angle
+            player.get(turn)[1].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
+            angle_gui.angle = player.get(turn)[1].angle
 
             if keystate[pg.K_SPACE]:
                 player.get(turn)[0].is_shooting = True
@@ -153,7 +146,7 @@ def main():
                     screen_rect=screen.get_rect(),
                     velocity=150, x=player.get(turn)[0].get_pos()[0], y=player.get(turn)[0].get_pos()[1],
                     direction=player.get(turn)[0].facing,
-                    angle=player.get(turn)[2].angle,
+                    angle=player.get(turn)[1].angle,
                     adv=player.get(turn % 2 + 1)[0].get_pos(),
                     world=world.hit_box()
                 )
