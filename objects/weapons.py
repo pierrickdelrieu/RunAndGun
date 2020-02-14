@@ -27,8 +27,8 @@ class Bullet(pg.sprite.Sprite):
         self.screen_rect = screen_rect
 
         self.velocity = velocity
-        self.x = x
-        self.y = y + 30
+        self.x = x + 10
+        self.y = y + 42
         self.origin = (self.x, self.y)
         self.damage = damage
         self.angle = angle
@@ -58,7 +58,7 @@ class Bullet(pg.sprite.Sprite):
 
     def update(self):
         print(self.x, self.y, self.adv)
-        if (self.adv[0] + 40) > self.x > (self.adv[0] - 40) and (self.adv[1] + 128) > self.y > (self.adv[1] - 128):
+        if (self.adv[0] + 96) > self.x > (self.adv[0] - 16) and (self.adv[1] + 144) > self.y > (self.adv[1] - 16):
             self.image = pg.transform.scale(
                 pg.image.load(f"resources/sprites/effects/explosion.png").convert_alpha(),
                 (64, 64)

@@ -21,26 +21,26 @@ def main():
             -1: pg.transform.flip(
                 pg.transform.scale(
                     pg.image.load(f"resources/sprites/player/patrick/body.png").convert_alpha(),
-                    (64, 128)
+                    (128, 128)
                 ),
                 True, False
             ),
             1: pg.transform.scale(
                 pg.image.load(f"resources/sprites/player/patrick/body.png").convert_alpha(),
-                (64, 128)
+                (128, 128)
             )
         },
         'bob': {
             -1: pg.transform.flip(
                 pg.transform.scale(
                     pg.image.load(f"resources/sprites/player/bob/body.png").convert_alpha(),
-                    (64, 128)
+                    (128, 128)
                 ),
                 True, False
             ),
             1: pg.transform.scale(
                 pg.image.load(f"resources/sprites/player/bob/body.png").convert_alpha(),
-                (64, 128)
+                (128, 128)
             )
         },
     }
@@ -49,15 +49,23 @@ def main():
     Player.life = 100
     Player.fuel = 10e10
 
-    img = {-1: {}, 1: {}}
+    img = {'patrick': {-1: {}, 1: {}}, 'bob': {-1: {}, 1: {}}}
     for i in range(-4, 15, 2):
         loaded_img = pg.transform.scale(
             pg.image.load(f"resources/sprites/player/patrick/arm/{i}.png").convert_alpha(),
             (128, 128)
         )
 
-        img[-1][i] = pg.transform.flip(loaded_img, True, False)
-        img[1][i] = loaded_img
+        img['patrick'][-1][i] = pg.transform.flip(loaded_img, True, False)
+        img['patrick'][1][i] = loaded_img
+
+        loaded_img = pg.transform.scale(
+            pg.image.load(f"resources/sprites/player/bob/arm/{i}.png").convert_alpha(),
+            (128, 128)
+        )
+
+        img['bob'][-1][i] = pg.transform.flip(loaded_img, True, False)
+        img['bob'][1][i] = loaded_img
     Arm.images = img
 
     text = pg.font.Font(None, 20)
@@ -99,8 +107,8 @@ def main():
     player1 = Player(screen.get_rect(), world.level.players.get(1), 1, 'patrick')
     player2 = Player(screen.get_rect(), world.level.players.get(2), -1, 'bob')
 
-    arm1 = Arm(screen.get_rect(), world.level.players.get(1), 1)
-    arm2 = Arm(screen.get_rect(), world.level.players.get(2), -1)
+    arm1 = Arm(screen.get_rect(), world.level.players.get(1), 1, 'patrick')
+    arm2 = Arm(screen.get_rect(), world.level.players.get(2), -1, 'bob')
 
     life1 = Life(screen.get_rect(), world.level.players.get(1))
     life2 = Life(screen.get_rect(), world.level.players.get(2))

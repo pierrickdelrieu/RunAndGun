@@ -16,7 +16,7 @@ class Player(pg.sprite.Sprite):
     def __init__(self, screen_rect, pos: tuple, facing: int, skin):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
-        
+
         self.images = self.images.get(skin)
 
         self.image = self.images.get(facing)
@@ -51,9 +51,11 @@ class Arm(pg.sprite.Sprite):
     gun_offset = -11
     images = {}
 
-    def __init__(self, screen_rect, pos: tuple, facing):
+    def __init__(self, screen_rect, pos: tuple, facing, skin):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
+
+        self.images = self.images.get(skin)
 
         self.image = self.images.get(facing).get(self.angle)
         self.rect = self.image.get_rect(
