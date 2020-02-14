@@ -85,7 +85,7 @@ class Bullet(pg.sprite.Sprite):
         for tile in self.world:
             rect = pg.Rect(tile[0], tile[1], TILE_WIDTH, TILE_HEIGHT)
 
-            if rect.colliderect(self.rect):
+            if rect.collidepoint(self.x, self.y + 20):
                 pg.time.wait(1000)
                 self.kill()
 

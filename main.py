@@ -12,7 +12,7 @@ def main():
     clock = pg.time.Clock()
 
     level = 1
-    turn = 1
+    turn = 2
 
     screen = pg.display.set_mode(SCREENRECT.size)
 
@@ -21,26 +21,26 @@ def main():
             -1: pg.transform.flip(
                 pg.transform.scale(
                     pg.image.load(f"resources/sprites/player/patrick/body.png").convert_alpha(),
-                    (128, 128)
+                    (PLAYER_WIDTH, PLAYER_HEIGHT)
                 ),
                 True, False
             ),
             1: pg.transform.scale(
                 pg.image.load(f"resources/sprites/player/patrick/body.png").convert_alpha(),
-                (128, 128)
+                (PLAYER_WIDTH, PLAYER_HEIGHT)
             )
         },
         'bob': {
             -1: pg.transform.flip(
                 pg.transform.scale(
                     pg.image.load(f"resources/sprites/player/bob/body.png").convert_alpha(),
-                    (128, 128)
+                    (PLAYER_WIDTH, PLAYER_HEIGHT)
                 ),
                 True, False
             ),
             1: pg.transform.scale(
                 pg.image.load(f"resources/sprites/player/bob/body.png").convert_alpha(),
-                (128, 128)
+                (PLAYER_WIDTH, PLAYER_HEIGHT)
             )
         },
     }
@@ -53,7 +53,7 @@ def main():
     for i in range(-4, 15, 2):
         loaded_img = pg.transform.scale(
             pg.image.load(f"resources/sprites/player/patrick/arm/{i}.png").convert_alpha(),
-            (128, 128)
+            (PLAYER_WIDTH, PLAYER_HEIGHT)
         )
 
         img['patrick'][-1][i] = pg.transform.flip(loaded_img, True, False)
@@ -61,7 +61,7 @@ def main():
 
         loaded_img = pg.transform.scale(
             pg.image.load(f"resources/sprites/player/bob/arm/{i}.png").convert_alpha(),
-            (128, 128)
+            (PLAYER_WIDTH, PLAYER_HEIGHT)
         )
 
         img['bob'][-1][i] = pg.transform.flip(loaded_img, True, False)

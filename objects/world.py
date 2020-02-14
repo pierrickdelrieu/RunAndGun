@@ -11,8 +11,8 @@ class World:
         self.tile_width = TILE_WIDTH
         self.tile_height = TILE_HEIGHT
 
-        self.size_tiles_x_world = 28
-        self.size_tiles_y_world = 14
+        self.size_tiles_x_world = SIZE_X_WORLD
+        self.size_tiles_y_world = SIZE_Y_WORLD
 
         self.screen_width = self.tile_width * self.size_tiles_x_world
         self.screen_height = self.tile_height * self.size_tiles_y_world
