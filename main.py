@@ -1,5 +1,4 @@
 from Terrain import Terrain
-from Perso import Perso
 import pygame
 from constante import *
 import importlib #permet de personnalisé l'import d'une librairie
