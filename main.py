@@ -10,9 +10,7 @@ niveau = "1" #le niveau correspond au tableau 2D de la map
 tour_perso = 1
 tab_terrain = importlib.import_module("terrain."+theme+".terrain"+niveau) #import tableau du terrain
 
-creation_random_terrain = importlib.import_module("terrain.creation_tab_terrain") #creer un tableau aléatoire
 
-map = creation_random_terrain.creation_tab_terrain(tab_terrain.modele_terrain)
 
 #Initialisation de pygame
 pygame.init()
@@ -24,7 +22,9 @@ pygame.display.set_caption("Projet transverse")
 
 
 #Affichage terrain
-terrain = Terrain (map, theme, fenetre) #initialise la class Terrain
+terrain = Terrain (theme, fenetre) #initialise la class Terrain
+map = terrain.creation_tab_terrain(tab_terrain.modele_terrain)
+
 
 clock = pygame.time.Clock()
 continuer = 0
@@ -39,16 +39,17 @@ jeu = 0
 #2 - choix theme
 #3 - choix map
     
+#Boucle de jeu
 while (continuer == 0):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             continuer = 1
-
+                
     if(jeu==0):
         menu.barre_chargement()
         jeu=1
     else:
-        terrain.rendu_terrain()
+        terrain.rendu_terrain(map)
     
     pygame.display.flip()
 

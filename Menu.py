@@ -19,11 +19,11 @@ class Menu:
         suivi = 0
         temps_exe = 4
         
-        while (suivi < 200):
+        
+        while ((suivi < 200) and (continuer == 0)):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     continuer = 1
-                    break
 
             self.fenetre.blit(nom_jeu, (400, 200))
             pygame.draw.rect(self.fenetre, WHITE, (300,400,800,35))  #(abscisse,ordonné,longuer,hauteur)
