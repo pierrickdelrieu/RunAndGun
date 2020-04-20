@@ -1,8 +1,8 @@
 from Class.armes import Tomato
 from Class.constants import *
-from Class.gui import Angle, Energy
+from Class.gui import Angle, Energie
 from Class.joueur import Joueur, Bras
-from Class.monde import World
+from Class.monde import Monde
 
 
 def chargement_textures(theme: str):
@@ -21,11 +21,11 @@ def chargement_textures(theme: str):
     """
     texture_joueurs = [
         # Joueur 1
-        {   # -1 Pour quand le joueur regarde a gauche
+        {  # -1 Pour quand le joueur regarde a gauche
             -1: pg.transform.flip(
                 pg.transform.scale(
                     pg.image.load(
-                        f"themes/{theme}/joueur/1/corps.png"
+                        "{}/1/corps.png".format(ACCES_JOUEUR.format(theme))
                     ).convert_alpha(),
                     (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
                 ),
@@ -34,18 +34,18 @@ def chargement_textures(theme: str):
             # 1 Pour quand il regarde a droite
             1: pg.transform.scale(
                 pg.image.load(
-                    f"themes/{theme}/joueur/1/corps.png"
+                    "{}/1/corps.png".format(ACCES_JOUEUR.format(theme))
                 ).convert_alpha(),
                 (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
             )
         },
 
         # Joueur 2
-        {   # -1 Pour quand le joueur regarde a gauche
+        {  # -1 Pour quand le joueur regarde a gauche
             -1: pg.transform.flip(
                 pg.transform.scale(
                     pg.image.load(
-                        f"themes/{theme}/joueur/2/corps.png"
+                        "{}/2/corps.png".format(ACCES_JOUEUR.format(theme))
                     ).convert_alpha(),
                     (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
                 ),
@@ -54,7 +54,7 @@ def chargement_textures(theme: str):
             # 1 Pour quand il regarde a droite
             1: pg.transform.scale(
                 pg.image.load(
-                    f"themes/{theme}/joueur/2/corps.png"
+                    "{}/2/corps.png".format(ACCES_JOUEUR.format(theme))
                 ).convert_alpha(),
                 (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
             )
@@ -76,76 +76,117 @@ def chargement_textures(theme: str):
     for i in range(-4, 15, 2):
         image_joueur1 = pg.transform.scale(
             pg.image.load(
-                f"themes/{theme}/joueur/1/bras/{i}.png"
+                "{}/1/bras/{}.png".format(ACCES_JOUEUR.format(theme), i)
             ).convert_alpha(),
             (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
         )
         image_joueur2 = pg.transform.scale(
             pg.image.load(
-                f"themes/{theme}/joueur/2/bras/{i}.png"
+                "{}/2/bras/{}.png".format(ACCES_JOUEUR.format(theme), i)
             ).convert_alpha(),
             (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
         )
 
         texture_bras[0][-1][i] = pg.transform.flip(image_joueur1, True, False)
-        texture_bras[0][-1][i] = image_joueur1
+        texture_bras[0][1][i] = image_joueur1
 
-        texture_bras[0][-1][i] = pg.transform.flip(image_joueur2, True, False)
-        texture_bras[0][-1][i] = image_joueur2
+        texture_bras[1][-1][i] = pg.transform.flip(image_joueur2, True, False)
+        texture_bras[1][1][i] = image_joueur2
 
     return texture_joueurs, texture_bras
 
 
-def main(theme: str):
+def chargement_niveau(screen, theme: str, id_niveau: int):
+    monde = Monde(theme)
+    monde.chargement_map(1)
+    monde.enregistrement_map()
+
+    fond = pg.Surface(RESOLUTION.size)
+    fond.blit(
+        pg.image.load(
+            "{}/{}/rendu.png".format(
+                ACCES_TERRAINS.format(theme),
+                id_niveau
+            )).convert_alpha(),
+        (0, 0))
+    screen.blit(fond, (0, 0))
+    pg.display.flip()
+
+    return monde, fond
+
+
+def application_texture(screen, monde, texture_joueurs, texture_bras, toutes_les_images):
+    Joueur.containers = toutes_les_images
+    Bras.containers = toutes_les_images
+
+    joueur1 = Joueur(
+        screen.get_rect(),
+        monde.params.get(1),
+        texture_joueurs[0],
+        regarde=1,  # vers ou doit le perso (1 : droite, -1 : gauche)
+        peau=1  # peau du perso, 1 : joueur 1, 2 : joueur 2
+    )
+    joueur2 = Joueur(
+        screen.get_rect(),
+        monde.params.get(2),
+        texture_joueurs[1],
+        regarde=1,  # vers ou doit le perso (1 : droite, -1 : gauche)
+        peau=2  # peau du perso, 1 : joueur 1, 2 : joueur 2
+    )
+
+    bras1 = Bras(
+        screen.get_rect(),
+        monde.params.get(1),
+        texture_bras[0],
+        regarde=1,  # vers ou doit pointer le bras (1 : droite, -1 : gauche)
+        peau=1  # bras du perso, 1 : joueur 1, 2 : joueur 2
+    )
+    bras2 = Bras(
+        screen.get_rect(),
+        monde.params.get(2),
+        texture_bras[1],
+        regarde=1,  # vers ou doit pointer le bras (1 : droite, -1 : gauche)
+        peau=2  # bras du perso, 1 : joueur 1, 2 : joueur 2
+    )
+
+    return joueur1, bras1, joueur2, bras2
+
+
+def main(theme: str, id_niveau: int):
     pg.init()
     clock = pg.time.Clock()
     tour = 1
 
     screen = pg.display.set_mode(RESOLUTION.size)
 
+    monde, fond = chargement_niveau(screen, theme, id_niveau)
+    texture_joueurs, texture_bras = chargement_textures(theme)
+    toutes_les_images = pg.sprite.RenderUpdates()
+    joueur1, bras1, joueur2, bras2 = application_texture(
+        screen, monde,
+        texture_joueurs, texture_bras,
+        toutes_les_images
+    )
+
     text = pg.font.Font(None, 20)
     text.set_italic(True)
 
-    world = World(theme)
-    world.chargement_map(1)
-    world.save_map()
-
-    background = pg.Surface(RESOLUTION.size)
-    background.blit(
-        pg.image.load(f"resources/levels/{level}/map.png").convert_alpha(),
-        (0, 0))
-    screen.blit(background, (0, 0))
-    pg.display.flip()
-
-    all_sprites = pg.sprite.RenderUpdates()
-
-    Joueur.containers = all_sprites
-    Bras.containers = all_sprites
-    Tomato.containers = all_sprites
-
-    Angle.containers = all_sprites
-    Energy.containers = all_sprites
-
-    player1 = Joueur(screen.get_rect(), world.level.players.get(1), 1,
-                     'patrick')
-    player2 = Joueur(screen.get_rect(), world.level.players.get(2), -1, 'bob')
-
-    arm1 = Bras(screen.get_rect(), world.level.players.get(1), 1, 'patrick')
-    arm2 = Bras(screen.get_rect(), world.level.players.get(2), -1, 'bob')
+    Angle.containers = toutes_les_images
+    Energie.containers = toutes_les_images
 
     angle_gui = Angle()
-    fuel_gui = Energy()
+    energie_gui = Energie()
 
-    player = {
-        1: [player1, arm1],
-        2: [player2, arm2],
+    joueurs = {
+        1: [joueur1, bras1],
+        2: [joueur2, bras2],
     }
 
     if pg.font:
-        all_sprites.add(angle_gui)
-        all_sprites.add(fuel_gui)
+        toutes_les_images.add(angle_gui)
+        toutes_les_images.add(energie_gui)
 
-    while player.get(turn)[0].alive():
+    while joueurs.get(tour)[0].alive():
         pg.display.set_caption(f"Tank! - fps:{round(clock.get_fps())}")
         for event in pg.event.get():
             if event.type == pg.QUIT or (
@@ -153,36 +194,36 @@ def main(theme: str):
                 return
 
         keystate = pg.key.get_pressed()
-        all_sprites.clear(screen, background)
-        all_sprites.update()
+        toutes_les_images.clear(screen, fond)
+        toutes_les_images.update()
 
-        if player.get(turn)[0].energy > 0:
+        if joueurs.get(tour)[0].energie > 0:
             direction = keystate[pg.K_RIGHT] - keystate[pg.K_LEFT]
 
-            player.get(turn)[0].move(direction, world.hit_box())
+            joueurs.get(tour)[0].move(direction, monde.hit_box())
 
-            player.get(turn)[1].move(direction)
-            fuel_gui.energy = player.get(turn)[0].energy
+            joueurs.get(tour)[1].move(direction)
+            energie_gui.energie = joueurs.get(tour)[0].energie
 
-        if not player.get(turn)[0].is_shooting:
+        if not joueurs.get(tour)[0].is_shooting:
             # player.get(turn)[0].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
-            player.get(turn)[1].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
-            angle_gui.angle = player.get(turn)[1].angle
+            joueurs.get(tour)[1].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
+            angle_gui.angle = joueurs.get(tour)[1].angle
 
             if keystate[pg.K_SPACE]:
-                player.get(turn)[0].is_shooting = True
+                joueurs.get(tour)[0].is_shooting = True
                 tomato = Tomato(
                     screen_rect=screen.get_rect(),
-                    velocity=150, x=player.get(turn)[0].get_pos()[0],
-                    y=player.get(turn)[0].get_pos()[1],
-                    direction=player.get(turn)[0].facing,
-                    angle=player.get(turn)[1].angle,
-                    adv=player.get(turn % 2 + 1)[0].get_pos(),
-                    world=world.hit_box()
+                    velocity=150, x=joueurs.get(tour)[0].get_pos()[0],
+                    y=joueurs.get(tour)[0].get_pos()[1],
+                    direction=joueurs.get(tour)[0].facing,
+                    angle=joueurs.get(tour)[1].angle,
+                    adv=joueurs.get(tour % 2 + 1)[0].get_pos(),
+                    world=tour.hit_box()
                 )
                 tomato.update()
 
-        floor = all_sprites.draw(screen)
+        floor = toutes_les_images.draw(screen)
         pg.display.update(floor)
 
         clock.tick(20)
@@ -193,7 +234,7 @@ def main(theme: str):
 
 if __name__ == "__main__":
     try:
-        main("bob")
+        main("bob", 1)
     except KeyboardInterrupt:
         pg.quit()
         quit()

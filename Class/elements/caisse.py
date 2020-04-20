@@ -14,6 +14,6 @@ class Caisse(pg.sprite.Sprite):
             ), (LARGEUR_TUILE, HAUTEUR_TUILE)
         )
 
-    def afficher(self, pos):
+    def afficher(self, pos: tuple):
         self.pos = pos
         return self.tuile

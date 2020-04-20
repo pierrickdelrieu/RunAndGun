@@ -12,7 +12,7 @@ class Sol(pg.sprite.Sprite):
         self.pos = (0, 0)
 
         self.tuiles = []
-        for i in range(1, NOMBRE):
+        for i in range(1, NOMBRE + 1):
             self.tuiles.append(pg.transform.scale(
                 pg.image.load(
                     "{}/sol{}.png".format(
@@ -22,6 +22,6 @@ class Sol(pg.sprite.Sprite):
                 ), (LARGEUR_TUILE, HAUTEUR_TUILE)
             ))
 
-    def afficher(self, pos):
+    def afficher(self, pos: tuple):
         self.pos = pos
         return self.tuiles[random.randint(0, NOMBRE - 1)]

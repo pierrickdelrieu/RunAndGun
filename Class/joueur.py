@@ -4,19 +4,20 @@ from .constants import LARGEUR_TUILE, HAUTEUR_TUILE
 
 
 class Joueur(pg.sprite.Sprite):
-    energy: 100
-    life: 100
-    speed = 5
+    energie: 100
+    vie: 100
+    vitesse = 5
     bonds = 10
-    images = {}
 
     is_shooting: bool = False
 
-    def __init__(self, screen_rect, pos: tuple, facing: int, skin):
+    def __init__(self, screen_rect, pos: tuple, textures, regarde: int, peau: int):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
 
-        self.image = self.images.get(facing)
+        self.regarde = regarde
+        self.images = textures
+        self.image = textures.get(self.regarde)
 
         self.rect = self.image.get_rect(
             midbottom=(
@@ -25,18 +26,17 @@ class Joueur(pg.sprite.Sprite):
             )
         )
         self.origtop = self.rect.top
-        self.facing = facing
 
     def move(self, direction, world):
         if direction:
-            self.facing = direction
-        self.rect.move_ip(direction * self.speed, 0)
+            self.regarde = direction
+        self.rect.move_ip(direction * self.vitesse, 0)
         self.rect = self.rect.clamp(self.screen_rect)
 
-        self.image = self.images.get(self.facing)
+        self.image = self.images.get(self.regarde)
 
         if direction != 0:
-            self.energy -= 1
+            self.energie -= 1
 
         self.rect.top = self.origtop - (self.rect.left // self.bonds % 2)
 
@@ -47,31 +47,31 @@ class Joueur(pg.sprite.Sprite):
 
 class Bras(pg.sprite.Sprite):
     angle = 0
-    speed = 5
+    vitesse = 5
     bonds = 10
-    images = {}
 
-    def __init__(self, screen_rect, pos: tuple, facing, skin):
+    def __init__(self, screen_rect, pos: tuple, textures, regarde: int, peau: int):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
 
-        self.images = self.images.get(skin)
+        self.regarde = regarde
+        self.images = textures
+        self.image = textures.get(self.regarde)
 
-        self.image = self.images.get(facing).get(self.angle)
+        self.image = self.images.get(regarde).get(self.angle)
         self.rect = self.image.get_rect(
             midbottom=((pos[1] + 1) * LARGEUR_TUILE, (pos[0] + 1) * HAUTEUR_TUILE)
         )
         self.origtop = self.rect.top
-        self.facing = facing
 
     def move(self, direction):
         if direction:
-            self.facing = direction
+            self.regarde = direction
 
-        self.rect.move_ip(direction * self.speed, 0)
+        self.rect.move_ip(direction * self.vitesse, 0)
         self.rect = self.rect.clamp(self.screen_rect)
 
-        self.image = self.images[self.facing][self.angle]
+        self.image = self.images[self.regarde][self.angle]
 
         self.rect.top = self.origtop - (self.rect.left // self.bonds % 2)
 
@@ -81,7 +81,7 @@ class Bras(pg.sprite.Sprite):
                 if angle == -1 and self.angle == -4 or angle == 1 and self.angle == 14:
                     return
                 self.angle += angle * 2
-                self.image = self.images.get(self.facing).get(self.angle)
+                self.image = self.images.get(self.regarde).get(self.angle)
                 pg.time.wait(100)
 
     def get_pos(self):

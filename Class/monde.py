@@ -5,67 +5,87 @@ from .elements import *
 from .constants import *
 
 
-class World:
+class Monde:
     id_niveau: int
 
     def __init__(self, theme: str):
-        self.largeur_tuile = LARGEUR_TUILE
-        self.hauteur_tuile = HAUTEUR_TUILE
-
-        self.largeur_terrain = LARGEUR_TERRAIN
-        self.hauteur_terrain = HAUTEUR_TERRAIN
-
-        self.largeur_screen = self.largeur_tuile * self.largeur_terrain
-        self.hauteur_screen = self.hauteur_tuile * self.hauteur_terrain
+        self.largeur_screen = LARGEUR_TUILE * LARGEUR_TERRAIN
+        self.hauteur_screen = HAUTEUR_TUILE * HAUTEUR_TERRAIN
 
         self.niveau = []
         self.theme = theme
+        self.params = {}
 
-        self.tiles = {
-            'V': Vide,
-            'T': Terre,
-            'S': Sol,
-            'C': Caisse,
+        self.tuiles = {
+            'V': Vide(self.theme),
+            'T': Terre(self.theme),
+            'S': Sol(self.theme),
+            'C': Caisse(self.theme),
         }
 
     def chargement_map(self, id_niveau: int) -> None:
+        """
+        Charge le niveau correspondant a l'id, dans self.niveau
+        Args:
+            id_niveau (int): ID du niveau a charger
+        """
         self.id_niveau = id_niveau
 
         chemin = "{}/{}".format(ACCES_TERRAINS.format(self.theme), id_niveau)
 
+        # on charge le niveau qui est sauvegardé dans un .csv car plus simple
+        # de travailler dessus depui un tableur
         with open(f"{chemin}/model.csv", newline='') as model:
             lignes = csv.reader(model, delimiter=',')
 
-            for ligne in lignes:
-                print(', '.join(ligne))
+            self.niveau = list(lignes)
 
-    def save_map(self) -> None:
-        background = pg.Surface(self.screen_size())
-        background.blit(
-            pg.image.load(f"{TILES_PATH}/sky.jpg").convert_alpha(),
+        params = importlib.import_module(f"{chemin.replace('/', '.')}.params")
+        self.params[1] = params.pos_perso1
+        self.params[2] = params.pos_perso2
+
+    def enregistrement_map(self) -> None:
+        """
+        Enregistre le niveau dans un .png pour, par la suite, n'avoir
+        qu'a afficher une image en fond d'ecran
+        """
+        fond = pg.Surface(self.taille_screen())
+        fond.blit(
+            pg.image.load(
+                "{}/fond.png".format(ACCES_TERRAINS.format(self.theme))
+            ).convert_alpha(),
             (0, 0)
         )
 
-        y_max = int(self.screen_height / self.tile_height)
-        x_max = int(self.screen_width / self.tile_width)
+        x_max = self.largeur_screen // LARGEUR_TUILE
+        y_max = self.hauteur_screen // HAUTEUR_TUILE
 
         for i in range(0, y_max):
             for j in range(0, x_max):
-                x = j * self.tile_width
-                y = i * self.tile_height
-                item = self.level.layouts[i][j]
+                x = j * LARGEUR_TUILE
+                y = i * HAUTEUR_TUILE
+                tuile = self.niveau[i][j]
 
-                background.blit(
-                    self.tiles[item].render((x, y)),
+                fond.blit(
+                    self.tuiles[tuile].afficher((x, y)),
                     (x, y)
                 )
 
         pg.display.update()
 
-        pg.image.save(background, f"resources/levels/{self.level_id}/map.png")
+        pg.image.save(
+            fond,
+            "{}/{}/rendu.png".format(
+                ACCES_TERRAINS.format(self.theme),
+                self.id_niveau
+            )
+        )
 
-    def screen_size(self) -> tuple:
-        size = (self.tile_width * self.size_tiles_x_world, self.tile_height * self.size_tiles_y_world)
+    def taille_screen(self) -> tuple:
+        size = (
+            self.largeur_screen,
+            self.hauteur_screen
+        )
         return size
 
     def hit_box(self) -> list:
