@@ -4,6 +4,33 @@ from Class.gui import Angle, Energie
 from Class.joueur import Joueur, Bras
 from Class.monde import Monde
 
+chargement_etapes = 1
+
+pg.init()
+fenetre = pg.display.set_mode(RESOLUTION.size)
+
+
+def chargement():
+    font = pg.font.Font(None, 100)
+    nom_jeu = font.render("Projet Transverse", 1, (255, 255, 255))
+
+    fenetre.blit(nom_jeu, (400, 200))
+
+    pg.draw.rect(
+        fenetre, pg.color.Color('white'),
+        (300, 375, 825, 35)  # (abscisse,ordonné,longuer,hauteur)
+    )
+    pg.draw.rect(
+        fenetre, pg.color.Color('cadetblue4'),
+        (300, 375, 55 * chargement_etapes, 35)
+        # (abscisse,ordonné,longueur,hauteur)
+    )
+
+    pg.display.flip()
+
+
+chargement()
+
 
 def chargement_textures(theme: str):
     """
@@ -19,6 +46,8 @@ def chargement_textures(theme: str):
             texture_joueurs (list): Tableau avec les textures du joueur 1 et 2 ainsi que où ils regardent
             texture_bras (list): Tableau avec les textures du bras des joueurs 1 et 2 ainsi que où ils pointent
     """
+    global chargement_etapes
+
     texture_joueurs = [
         # Joueur 1
         {  # -1 Pour quand le joueur regarde a gauche
@@ -61,6 +90,9 @@ def chargement_textures(theme: str):
         }
     ]
 
+    chargement_etapes += 1
+    chargement()
+
     texture_bras = [
         {  # meme idée que plus haut mais cette foi on enregistre les
             # bras dans un dict
@@ -93,10 +125,15 @@ def chargement_textures(theme: str):
         texture_bras[1][-1][i] = pg.transform.flip(image_joueur2, True, False)
         texture_bras[1][1][i] = image_joueur2
 
+        chargement_etapes += 1
+        chargement()
+
     return texture_joueurs, texture_bras
 
 
-def chargement_niveau(screen, theme: str, id_niveau: int):
+def chargement_niveau(theme: str, id_niveau: int):
+    global chargement_etapes
+
     monde = Monde(theme)
     monde.chargement_map(1)
     monde.enregistrement_map()
@@ -109,64 +146,81 @@ def chargement_niveau(screen, theme: str, id_niveau: int):
                 id_niveau
             )).convert_alpha(),
         (0, 0))
-    screen.blit(fond, (0, 0))
+    fenetre.blit(fond, (0, 0))
     pg.display.flip()
+
+    chargement_etapes += 1
+    chargement()
 
     return monde, fond
 
 
-def application_texture(screen, monde, texture_joueurs, texture_bras, toutes_les_images):
+def application_texture(monde, texture_joueurs, texture_bras,
+                        toutes_les_images):
+    global chargement_etapes
+
     Joueur.containers = toutes_les_images
     Bras.containers = toutes_les_images
 
     joueur1 = Joueur(
-        screen.get_rect(),
+        fenetre.get_rect(),
         monde.params.get(1),
         texture_joueurs[0],
         regarde=1,  # vers ou doit le perso (1 : droite, -1 : gauche)
         peau=1  # peau du perso, 1 : joueur 1, 2 : joueur 2
     )
     joueur2 = Joueur(
-        screen.get_rect(),
+        fenetre.get_rect(),
         monde.params.get(2),
         texture_joueurs[1],
-        regarde=1,  # vers ou doit le perso (1 : droite, -1 : gauche)
+        regarde=-1,  # vers ou doit le perso (1 : droite, -1 : gauche)
         peau=2  # peau du perso, 1 : joueur 1, 2 : joueur 2
     )
 
+    chargement_etapes += 1
+    chargement()
+
     bras1 = Bras(
-        screen.get_rect(),
+        fenetre.get_rect(),
         monde.params.get(1),
         texture_bras[0],
         regarde=1,  # vers ou doit pointer le bras (1 : droite, -1 : gauche)
         peau=1  # bras du perso, 1 : joueur 1, 2 : joueur 2
     )
     bras2 = Bras(
-        screen.get_rect(),
+        fenetre.get_rect(),
         monde.params.get(2),
         texture_bras[1],
-        regarde=1,  # vers ou doit pointer le bras (1 : droite, -1 : gauche)
+        regarde=-1,  # vers ou doit pointer le bras (1 : droite, -1 : gauche)
         peau=2  # bras du perso, 1 : joueur 1, 2 : joueur 2
     )
+
+    chargement_etapes += 1
+    chargement()
 
     return joueur1, bras1, joueur2, bras2
 
 
 def main(theme: str, id_niveau: int):
-    pg.init()
     clock = pg.time.Clock()
     tour = 1
 
-    screen = pg.display.set_mode(RESOLUTION.size)
+    chargement()
 
-    monde, fond = chargement_niveau(screen, theme, id_niveau)
+    monde, fond = chargement_niveau(theme, id_niveau)
     texture_joueurs, texture_bras = chargement_textures(theme)
     toutes_les_images = pg.sprite.RenderUpdates()
     joueur1, bras1, joueur2, bras2 = application_texture(
-        screen, monde,
+        monde,
         texture_joueurs, texture_bras,
         toutes_les_images
     )
+
+    # Si on arrive ici, c'est que tout a été chargé donc on vire la barre de
+    # chargement en forcant l'affichage sur la fenetre du fond qui vient 
+    # d'etre chargé
+    fenetre.blit(fond, (0, 0))
+    pg.display.flip()
 
     text = pg.font.Font(None, 20)
     text.set_italic(True)
@@ -193,12 +247,12 @@ def main(theme: str, id_niveau: int):
                     event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 return
 
-        keystate = pg.key.get_pressed()
-        toutes_les_images.clear(screen, fond)
+        touche_presse = pg.key.get_pressed()
+        toutes_les_images.clear(fenetre, fond)
         toutes_les_images.update()
 
         if joueurs.get(tour)[0].energie > 0:
-            direction = keystate[pg.K_RIGHT] - keystate[pg.K_LEFT]
+            direction = touche_presse[pg.K_RIGHT] - touche_presse[pg.K_LEFT]
 
             joueurs.get(tour)[0].move(direction, monde.hit_box())
 
@@ -207,23 +261,24 @@ def main(theme: str, id_niveau: int):
 
         if not joueurs.get(tour)[0].is_shooting:
             # player.get(turn)[0].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
-            joueurs.get(tour)[1].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
+            joueurs.get(tour)[1].rotate(
+                touche_presse[pg.K_UP] - touche_presse[pg.K_DOWN])
             angle_gui.angle = joueurs.get(tour)[1].angle
 
-            if keystate[pg.K_SPACE]:
+            if touche_presse[pg.K_SPACE]:
                 joueurs.get(tour)[0].is_shooting = True
                 tomato = Tomato(
-                    screen_rect=screen.get_rect(),
+                    screen_rect=fenetre.get_rect(),
                     velocity=150, x=joueurs.get(tour)[0].get_pos()[0],
                     y=joueurs.get(tour)[0].get_pos()[1],
-                    direction=joueurs.get(tour)[0].facing,
+                    direction=joueurs.get(tour)[0].regarde,
                     angle=joueurs.get(tour)[1].angle,
                     adv=joueurs.get(tour % 2 + 1)[0].get_pos(),
-                    world=tour.hit_box()
+                    world=monde.hit_box()
                 )
                 tomato.update()
 
-        floor = toutes_les_images.draw(screen)
+        floor = toutes_les_images.draw(fenetre)
         pg.display.update(floor)
 
         clock.tick(20)

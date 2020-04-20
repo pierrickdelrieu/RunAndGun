@@ -91,14 +91,14 @@ class Monde:
     def hit_box(self) -> list:
         hit_box = []
 
-        y_max = int(self.screen_height / self.tile_height)
-        x_max = int(self.screen_width / self.tile_width)
+        x_max = self.largeur_screen // LARGEUR_TUILE
+        y_max = self.hauteur_screen // HAUTEUR_TUILE
 
         for i in range(0, y_max):
             for j in range(0, x_max):
-                x = j * self.tile_width
-                y = i * self.tile_height
-                item = self.level.layouts[i][j]
+                x = j * LARGEUR_TUILE
+                y = i * HAUTEUR_TUILE
+                item = self.niveau[i][j]
 
                 if item != 0:
                     hit_box.append((x, y))

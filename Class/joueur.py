@@ -4,8 +4,6 @@ from .constants import LARGEUR_TUILE, HAUTEUR_TUILE
 
 
 class Joueur(pg.sprite.Sprite):
-    energie: 100
-    vie: 100
     vitesse = 5
     bonds = 10
 
@@ -21,10 +19,12 @@ class Joueur(pg.sprite.Sprite):
 
         self.rect = self.image.get_rect(
             midbottom=(
-                (pos[1] + 1) * LARGEUR_TUILE,
-                (pos[0] + 1) * HAUTEUR_TUILE
+                (pos[0] + 1) * LARGEUR_TUILE,
+                (pos[1] + 1) * HAUTEUR_TUILE
             )
         )
+        self.energie = 100
+        self.vie = 100
         self.origtop = self.rect.top
 
     def move(self, direction, world):
@@ -60,7 +60,9 @@ class Bras(pg.sprite.Sprite):
 
         self.image = self.images.get(regarde).get(self.angle)
         self.rect = self.image.get_rect(
-            midbottom=((pos[1] + 1) * LARGEUR_TUILE, (pos[0] + 1) * HAUTEUR_TUILE)
+            midbottom=(
+                (pos[0] + 1) * LARGEUR_TUILE,
+                (pos[1] + 1) * HAUTEUR_TUILE)
         )
         self.origtop = self.rect.top
 
