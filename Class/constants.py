@@ -15,5 +15,5 @@ ACCES_TUILES = "themes/{}/tuiles"
 ACCES_TERRAINS = "themes/{}/terrains"
 ACCES_JOUEUR = "themes/{}/joueur"
 
-LARGEUR_JOUEUR = 64
-HAUTEUR_JOUEUR = 64
+LARGEUR_JOUEUR = 96
+HAUTEUR_JOUEUR = 96

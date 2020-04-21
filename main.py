@@ -241,7 +241,7 @@ def main(theme: str, id_niveau: int):
         toutes_les_images.add(energie_gui)
 
     while joueurs.get(tour)[0].alive():
-        pg.display.set_caption(f"Tank! - fps:{round(clock.get_fps())}")
+        pg.display.set_caption(f"Projet Transverse! - fps:{round(clock.get_fps())}")
         for event in pg.event.get():
             if event.type == pg.QUIT or (
                     event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
