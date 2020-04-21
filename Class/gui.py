@@ -1,5 +1,7 @@
 import pygame as pg
 
+from .joueur import Joueur
+
 
 class Angle(pg.sprite.Sprite):
     angle = 0
@@ -44,3 +46,46 @@ class Energie(pg.sprite.Sprite):
             self.couleur = pg.Color('Orange')
 
         self.image = self.texte.render(text, 0, self.couleur)
+
+
+class Vie(pg.sprite.Sprite):
+    image: pg.Surface
+
+    def __init__(self, screen_rect, joueur: Joueur):
+        pg.sprite.Sprite.__init__(self,)
+        self.texte = pg.font.Font(None, 22)
+        self.texte.set_bold(1)
+        self.couleur = pg.Color("Black")
+
+        self.joueur = joueur
+        self.screen_rect = screen_rect
+
+        self.vie = self.joueur.vie
+
+        self.update()
+
+        self.rect = self.image.get_rect().move(self.joueur.get_pos()[0], self.joueur.get_pos()[1] + 15)
+
+    def update(self):
+        text = f"Vie: {self.vie}/100"
+
+        if self.vie == 0:
+            self.texte.set_underline(True)
+
+        if self.vie < 10:
+            self.couleur = pg.Color('Red')
+        elif self.vie < 50:
+            self.couleur = pg.Color('Orange3')
+        elif self.vie < 75:
+            self.couleur = pg.Color('Orange')
+
+        self.image = self.texte.render(text, 0, self.couleur)
+
+    def move(self, direction):
+        self.rect.move_ip(direction * self.joueur.vitesse, 0)
+        self.rect = self.rect.clamp(self.screen_rect)
+
+        if direction != 0:
+            self.joueur.energie -= 1
+
+        self.rect.top = self.joueur.orig_top

@@ -25,7 +25,8 @@ class Joueur(pg.sprite.Sprite):
         )
         self.energie = 100
         self.vie = 100
-        self.origtop = self.rect.top
+        self.orig_top = self.rect.top
+        self.en_vie = True
 
     def move(self, direction, world):
         if direction:
@@ -38,7 +39,7 @@ class Joueur(pg.sprite.Sprite):
         if direction != 0:
             self.energie -= 1
 
-        self.rect.top = self.origtop - (self.rect.left // self.bonds % 2)
+        self.rect.top = self.orig_top - (self.rect.left // self.bonds % 2)
 
     def get_pos(self):
         pos = (self.rect.left, self.rect.top)
