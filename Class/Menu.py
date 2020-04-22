@@ -17,7 +17,7 @@ def generation_couleur_survol(couleur: tuple) -> tuple:
     return (
         couleur[0] + (-50 if couleur[0] > 128 else 50),
         couleur[1] + (-50 if couleur[1] > 128 else 50),
-        couleur[2] + (-50 if couleur[2] > 128 else 50)
+        couleur[2] + (-50 if couleur[2] > 128 else 50),
     )
 
 
@@ -73,7 +73,7 @@ class Bouton:
     def __init__(
         self,
         fenetre,
-        couleur_fond: tuple,
+        couleur_fond,
         couleur_texte: tuple,
         texte: str,
         pos: tuple,
@@ -114,24 +114,20 @@ class Bouton:
 
         self.affiche(self.couleur_fond, self.couleur_texte)
 
-    def affiche(self, couleur_fond: tuple, couleur_texte: tuple, marges: tuple = ()):
-        titre = self.police.render(
-            self.texte, True, couleur_texte, None
-        )
+    def affiche(self, couleur_fond, couleur_texte: tuple, marges: tuple = ()):
+        titre = self.police.render(self.texte, True, couleur_texte, None)
         self.rect_titre = titre.get_rect()
         self.rect_titre.center = self.pos
 
-        if 4 >= len(marges) > 0:
+        if 4 >= len(marges) > 0 and couleur_fond is not None:
             # si 2, alors les marges en haut et en bas seront marges[0]
             # et marges[1] sera pour les marges a droite et gauche
             if len(marges) == 2:
                 rect_fond_titre = pg.Rect(
                     self.rect_titre[0] - marges[1],
                     self.rect_titre[1] - marges[0],
-
                     self.rect_titre[2] + marges[1] * 2,
                     self.rect_titre[3] + marges[0] * 2,
-
                 )
 
                 pg.draw.rect(self.fenetre, couleur_fond, rect_fond_titre)
@@ -141,7 +137,6 @@ class Bouton:
                 rect_fond_titre = pg.Rect(
                     self.rect_titre[0] - marges[3],
                     self.rect_titre[1] - marges[0],
-
                     self.rect_titre[2] + marges[1],
                     self.rect_titre[3] + marges[2],
                 )
@@ -189,19 +184,21 @@ class BoutonSelect(Bouton):
         if pg.mouse.get_pressed()[0] and not BOUTON_PRESS:
             BOUTON_PRESS = True
             self.choisie += 1
-            self.texte = self.texte_base + self.options[self.choisie % len(self.options)][0]
-            return [1, self.identifiant, self.action(self.options[self.choisie % len(self.options)])]
+            self.texte = (
+                self.texte_base + self.options[self.choisie % len(self.options)][0]
+            )
+            return [
+                1,
+                self.identifiant,
+                self.action(self.options[self.choisie % len(self.options)]),
+            ]
         elif not pg.mouse.get_pressed()[0]:
             BOUTON_PRESS = False
             return [0, self.identifiant, None]
 
 
 class Menu:
-    def __init__(
-        self,
-        fenetre,
-        **kwargs
-    ):
+    def __init__(self, fenetre, **kwargs):
         """
         Fenetre du menu
 

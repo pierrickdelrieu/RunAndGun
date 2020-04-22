@@ -15,6 +15,8 @@ def main(theme: str, id_niveau: int):
 
     chargement(fenetre, 1)
 
+    print(theme, id_niveau)
+
     monde, fond = chargement_niveau(fenetre, theme, id_niveau)
     texture_joueurs, texture_bras = chargement_textures(fenetre, theme)
     toutes_les_images = pg.sprite.RenderUpdates()
@@ -101,9 +103,9 @@ def main(theme: str, id_niveau: int):
 
 if __name__ == "__main__":
     try:
-        main("bob", 1)
+        main("bob", 2)
     except KeyboardInterrupt:
         pg.quit()
         quit()
-    except Exception as e:
-        crash(fenetre, e)
+    # except Exception as e:
+    #     crash(fenetre, e)

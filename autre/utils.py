@@ -137,7 +137,7 @@ def chargement_niveau(fenetre, theme: str, id_niveau: int):
             fond (list): -
     """
     monde = Monde(theme)
-    monde.chargement_map(1)
+    monde.chargement_map(id_niveau)
     monde.enregistrement_map()
 
     fond = pg.Surface(RESOLUTION.size)
