@@ -8,5 +8,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/angry-birds-python" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/pygame-menu" vcs="Git" />
   </component>
 </project>

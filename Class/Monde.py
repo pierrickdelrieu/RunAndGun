@@ -2,7 +2,7 @@ import csv
 import importlib
 
 from .elements import *
-from .constants import *
+from autre.constants import *
 
 
 class Monde:
@@ -17,10 +17,10 @@ class Monde:
         self.params = {}
 
         self.tuiles = {
-            'V': Vide(self.theme),
-            'T': Terre(self.theme),
-            'S': Sol(self.theme),
-            'C': Caisse(self.theme),
+            "V": Vide(self.theme),
+            "T": Terre(self.theme),
+            "S": Sol(self.theme),
+            "C": Caisse(self.theme),
         }
 
     def chargement_map(self, id_niveau: int) -> None:
@@ -35,8 +35,8 @@ class Monde:
 
         # on charge le niveau qui est sauvegardé dans un .csv car plus simple
         # de travailler dessus depui un tableur
-        with open(f"{chemin}/model.csv", newline='') as model:
-            lignes = csv.reader(model, delimiter=',')
+        with open(f"{chemin}/model.csv", newline="") as model:
+            lignes = csv.reader(model, delimiter=",")
 
             self.niveau = list(lignes)
 
@@ -54,7 +54,7 @@ class Monde:
             pg.image.load(
                 "{}/fond.png".format(ACCES_TERRAINS.format(self.theme))
             ).convert_alpha(),
-            (0, 0)
+            (0, 0),
         )
 
         x_max = self.largeur_screen // LARGEUR_TUILE
@@ -66,26 +66,17 @@ class Monde:
                 y = i * HAUTEUR_TUILE
                 tuile = self.niveau[i][j]
 
-                fond.blit(
-                    self.tuiles[tuile].afficher((x, y)),
-                    (x, y)
-                )
+                fond.blit(self.tuiles[tuile].afficher((x, y)), (x, y))
 
         pg.display.update()
 
         pg.image.save(
             fond,
-            "{}/{}/rendu.png".format(
-                ACCES_TERRAINS.format(self.theme),
-                self.id_niveau
-            )
+            "{}/{}/rendu.png".format(ACCES_TERRAINS.format(self.theme), self.id_niveau),
         )
 
     def taille_screen(self) -> tuple:
-        size = (
-            self.largeur_screen,
-            self.hauteur_screen
-        )
+        size = (self.largeur_screen, self.hauteur_screen)
         return size
 
     def hit_box(self) -> list:
@@ -100,7 +91,7 @@ class Monde:
                 y = i * HAUTEUR_TUILE
                 item = self.niveau[i][j]
 
-                if item != 0:
+                if item != "V":
                     hit_box.append((x, y))
 
         return hit_box

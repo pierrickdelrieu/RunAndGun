@@ -1,8 +1,6 @@
 import math
 
-from .constants import LARGEUR_TUILE, HAUTEUR_TUILE
-
-import pygame as pg
+from autre.constants import *
 
 
 class Bullet(pg.sprite.Sprite):
@@ -18,14 +16,18 @@ class Bullet(pg.sprite.Sprite):
     x: float
     y: float
 
-    def __init__(self,
-                 screen_rect: pg.Rect,
-                 velocity: float, x: float, y: float,
-                 angle: int,
-                 damage: int,
-                 adv: tuple,
-                 images_path,
-                 world: list):
+    def __init__(
+        self,
+        screen_rect: pg.Rect,
+        velocity: float,
+        x: float,
+        y: float,
+        angle: int,
+        damage: int,
+        adv: tuple,
+        images_path,
+        world: list,
+    ):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
 
@@ -41,15 +43,12 @@ class Bullet(pg.sprite.Sprite):
 
         self.images_path = images_path
         self.image = pg.transform.scale(
-                pg.image.load(self.images_path[0]).convert_alpha(),
-                (32, 32)
-            )
-
-        self.t = .5 if self.angle < 90 else .2
-
-        self.rect = self.image.get_rect(
-            center=self.screen_rect.center
+            pg.image.load(self.images_path[0]).convert_alpha(), (32, 32)
         )
+
+        self.t = 0.5 if self.angle < 90 else 0.2
+
+        self.rect = self.image.get_rect(center=self.screen_rect.center)
 
         self.damage = 10
 
@@ -61,18 +60,22 @@ class Bullet(pg.sprite.Sprite):
         adv = pg.Rect(self.adv[0], self.adv[1], 128, 128)
         if adv.colliderect(self.rect):
             self.image = pg.transform.scale(
-                pg.image.load(f"resources/sprites/effects/explosion.png").convert_alpha(),
-                (64, 64)
+                pg.image.load(
+                    f"resources/sprites/effects/explosion.png"
+                ).convert_alpha(),
+                (64, 64),
             )
             self.vx, self.vy = 0, 0
             self.hit = True
         else:
             self.x = self.origin[0] + (self.vx * self.t)
-            self.y = self.origin[1] - (self.vy * self.t - (self.gravity / 2) * self.t * self.t)
+            self.y = self.origin[1] - (
+                self.vy * self.t - (self.gravity / 2) * self.t * self.t
+            )
 
             self.rect.left, self.rect.top = self.x, self.y
 
-            self.t += .2
+            self.t += 0.2
 
             # self.image = pg.transform.scale(
             #     pg.image.load(self.images_path[0]).convert_alpha(),
@@ -96,19 +99,26 @@ class Bullet(pg.sprite.Sprite):
 class Tomato(Bullet):
     damage = 10
 
-    def __init__(self,
-                 screen_rect: pg.Rect,
-                 velocity: float, x: float, y: float,
-                 direction: int, angle: int,
-                 adv: tuple,
-                 world: list):
+    def __init__(
+        self,
+        screen_rect: pg.Rect,
+        velocity: float,
+        x: float,
+        y: float,
+        direction: int,
+        angle: int,
+        adv: tuple,
+        world: list,
+    ):
 
         super().__init__(
             screen_rect,
-            velocity, x, y,
+            velocity,
+            x,
+            y,
             angle if direction == 1 else 180 - angle,
-            self.damage, adv,
+            self.damage,
+            adv,
             [f"resources/sprites/bullets/tomato.png"],
-            world
+            world,
         )
-

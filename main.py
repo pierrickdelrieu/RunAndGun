@@ -1,7 +1,7 @@
-from Class.armes import Tomato
-from Class.gui import Angle, Energie, Vie
+from Class.Armes import Tomato
+from Class.GUI import Angle, Energie, Vie
 
-from utils import *
+from autre.utils import *
 
 pg.init()
 fenetre = pg.display.set_mode(RESOLUTION.size)
@@ -19,13 +19,11 @@ def main(theme: str, id_niveau: int):
     texture_joueurs, texture_bras = chargement_textures(fenetre, theme)
     toutes_les_images = pg.sprite.RenderUpdates()
     joueur1_corps, joueur1_bras, joueur2_corps, joueur2_bras = application_texture(
-        fenetre, monde,
-        texture_joueurs, texture_bras,
-        toutes_les_images
+        fenetre, monde, texture_joueurs, texture_bras, toutes_les_images
     )
 
     # Si on arrive ici, c'est que tout a été chargé donc on vire la barre de
-    # chargement en forcant l'affichage sur la fenetre du fond qui vient 
+    # chargement en forcant l'affichage sur la fenetre du fond qui vient
     # d'etre chargé
     fenetre.blit(fond, (0, 0))
     pg.display.flip()
@@ -54,7 +52,8 @@ def main(theme: str, id_niveau: int):
         pg.display.set_caption(f"Projet Transverse! - fps:{round(clock.get_fps())}")
         for event in pg.event.get():
             if event.type == pg.QUIT or (
-                    event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE
+            ):
                 return
 
         touche_presse = pg.key.get_pressed()
@@ -73,26 +72,28 @@ def main(theme: str, id_niveau: int):
         if not joueurs.get(tour)[0].is_shooting:
             # player.get(turn)[0].rotate(keystate[pg.K_UP] - keystate[pg.K_DOWN])
             joueurs.get(tour)[1].rotate(
-                touche_presse[pg.K_UP] - touche_presse[pg.K_DOWN])
+                touche_presse[pg.K_UP] - touche_presse[pg.K_DOWN]
+            )
             angle_gui.angle = joueurs.get(tour)[1].angle
 
             if touche_presse[pg.K_SPACE]:
                 joueurs.get(tour)[0].is_shooting = True
                 tomato = Tomato(
                     screen_rect=fenetre.get_rect(),
-                    velocity=150, x=joueurs.get(tour)[0].get_pos()[0],
+                    velocity=150,
+                    x=joueurs.get(tour)[0].get_pos()[0],
                     y=joueurs.get(tour)[0].get_pos()[1],
                     direction=joueurs.get(tour)[0].regarde,
                     angle=joueurs.get(tour)[1].angle,
                     adv=joueurs.get(tour % 2 + 1)[0].get_pos(),
-                    world=monde.hit_box()
+                    world=monde.hit_box(),
                 )
                 tomato.update()
 
         floor = toutes_les_images.draw(fenetre)
         pg.display.update(floor)
 
-        clock.tick(20)
+        clock.tick(10)
 
     pg.time.wait(1000)
     pg.quit()

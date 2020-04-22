@@ -1,8 +1,8 @@
 import traceback
 
-from Class.constants import *
-from Class.joueur import Joueur, Bras
-from Class.monde import Monde
+from autre.constants import *
+from Class.Joueur import Joueur, Bras
+from Class.Monde import Monde
 
 
 def chargement(fenetre, etape):
@@ -12,11 +12,13 @@ def chargement(fenetre, etape):
     fenetre.blit(nom_jeu, (400, 200))
 
     pg.draw.rect(
-        fenetre, pg.color.Color('white'),
-        (300, 375, 825, 35)  # (abscisse,ordonné,longuer,hauteur)
+        fenetre,
+        pg.Color("white"),
+        (300, 375, 825, 35),  # (abscisse,ordonné,longuer,hauteur)
     )
     pg.draw.rect(
-        fenetre, pg.color.Color('cadetblue4'),
+        fenetre,
+        pg.Color("cadetblue4"),
         (300, 375, 55 * etape, 35)
         # (abscisse,ordonné,longueur,hauteur)
     )
@@ -48,19 +50,19 @@ def chargement_textures(fenetre, theme: str):
                     pg.image.load(
                         "{}/1/corps.png".format(ACCES_JOUEUR.format(theme))
                     ).convert_alpha(),
-                    (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
+                    (LARGEUR_JOUEUR, HAUTEUR_JOUEUR),
                 ),
-                True, False
+                True,
+                False,
             ),
             # 1 Pour quand il regarde a droite
             1: pg.transform.scale(
                 pg.image.load(
                     "{}/1/corps.png".format(ACCES_JOUEUR.format(theme))
                 ).convert_alpha(),
-                (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
-            )
+                (LARGEUR_JOUEUR, HAUTEUR_JOUEUR),
+            ),
         },
-
         # Joueur 2
         {  # -1 Pour quand le joueur regarde a gauche
             -1: pg.transform.flip(
@@ -68,18 +70,19 @@ def chargement_textures(fenetre, theme: str):
                     pg.image.load(
                         "{}/2/corps.png".format(ACCES_JOUEUR.format(theme))
                     ).convert_alpha(),
-                    (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
+                    (LARGEUR_JOUEUR, HAUTEUR_JOUEUR),
                 ),
-                True, False
+                True,
+                False,
             ),
             # 1 Pour quand il regarde a droite
             1: pg.transform.scale(
                 pg.image.load(
                     "{}/2/corps.png".format(ACCES_JOUEUR.format(theme))
                 ).convert_alpha(),
-                (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
-            )
-        }
+                (LARGEUR_JOUEUR, HAUTEUR_JOUEUR),
+            ),
+        },
     ]
 
     chargement(fenetre, 2)
@@ -88,12 +91,9 @@ def chargement_textures(fenetre, theme: str):
         {  # meme idée que plus haut mais cette foi on enregistre les
             # bras dans un dict
             -1: {},
-            1: {}
+            1: {},
         },
-        {
-            -1: {},
-            1: {}
-        }
+        {-1: {}, 1: {}},
     ]
 
     for i in range(-4, 15, 2):
@@ -101,13 +101,13 @@ def chargement_textures(fenetre, theme: str):
             pg.image.load(
                 "{}/1/bras/{}.png".format(ACCES_JOUEUR.format(theme), i)
             ).convert_alpha(),
-            (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
+            (LARGEUR_JOUEUR, HAUTEUR_JOUEUR),
         )
         image_joueur2 = pg.transform.scale(
             pg.image.load(
                 "{}/2/bras/{}.png".format(ACCES_JOUEUR.format(theme), i)
             ).convert_alpha(),
-            (LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
+            (LARGEUR_JOUEUR, HAUTEUR_JOUEUR),
         )
 
         texture_bras[0][-1][i] = pg.transform.flip(image_joueur1, True, False)
@@ -143,11 +143,10 @@ def chargement_niveau(fenetre, theme: str, id_niveau: int):
     fond = pg.Surface(RESOLUTION.size)
     fond.blit(
         pg.image.load(
-            "{}/{}/rendu.png".format(
-                ACCES_TERRAINS.format(theme),
-                id_niveau
-            )).convert_alpha(),
-        (0, 0))
+            "{}/{}/rendu.png".format(ACCES_TERRAINS.format(theme), id_niveau)
+        ).convert_alpha(),
+        (0, 0),
+    )
     fenetre.blit(fond, (0, 0))
     pg.display.flip()
 
@@ -156,7 +155,9 @@ def chargement_niveau(fenetre, theme: str, id_niveau: int):
     return monde, fond
 
 
-def application_texture(fenetre, monde, texture_joueurs, texture_bras, toutes_les_images):
+def application_texture(
+    fenetre, monde, texture_joueurs, texture_bras, toutes_les_images
+):
     """
 
     Args:
@@ -183,14 +184,14 @@ def application_texture(fenetre, monde, texture_joueurs, texture_bras, toutes_le
         monde.params.get(1),
         texture_joueurs[0],
         regarde=1,  # vers ou doit le perso (1 : droite, -1 : gauche)
-        peau=1  # peau du perso, 1 : joueur 1, 2 : joueur 2
+        peau=1,  # peau du perso, 1 : joueur 1, 2 : joueur 2
     )
     joueur2 = Joueur(
         fenetre.get_rect(),
         monde.params.get(2),
         texture_joueurs[1],
         regarde=-1,  # vers ou doit le perso (1 : droite, -1 : gauche)
-        peau=2  # peau du perso, 1 : joueur 1, 2 : joueur 2
+        peau=2,  # peau du perso, 1 : joueur 1, 2 : joueur 2
     )
 
     chargement(fenetre, 5)
@@ -200,14 +201,14 @@ def application_texture(fenetre, monde, texture_joueurs, texture_bras, toutes_le
         monde.params.get(1),
         texture_bras[0],
         regarde=1,  # vers ou doit pointer le bras (1 : droite, -1 : gauche)
-        peau=1  # bras du perso, 1 : joueur 1, 2 : joueur 2
+        peau=1,  # bras du perso, 1 : joueur 1, 2 : joueur 2
     )
     bras2 = Bras(
         fenetre.get_rect(),
         monde.params.get(2),
         texture_bras[1],
         regarde=-1,  # vers ou doit pointer le bras (1 : droite, -1 : gauche)
-        peau=2  # bras du perso, 1 : joueur 1, 2 : joueur 2
+        peau=2,  # bras du perso, 1 : joueur 1, 2 : joueur 2
     )
 
     chargement(fenetre, 6)
@@ -231,9 +232,9 @@ def crash(fenetre, e):
 
     tb = traceback.TracebackException.from_exception(e)
     message = "Une erreur est survenue, la fenetre va se fermer dans 5s\n\n\n"
-    message += "Erreur: \n" + '\n'.join(tb.format())
+    message += "Erreur: \n" + "\n".join(tb.format())
 
-    for j, lignes in enumerate(message.split('\n')):
+    for j, lignes in enumerate(message.split("\n")):
         err = texte.render(lignes, 0, pg.Color("Red"))
 
         fenetre.blit(err, (10, j * 17 + 30))

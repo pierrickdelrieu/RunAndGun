@@ -1,6 +1,6 @@
 import pygame as pg
 
-from .joueur import Joueur
+from .Joueur import Joueur
 
 
 class Angle(pg.sprite.Sprite):
@@ -39,11 +39,11 @@ class Energie(pg.sprite.Sprite):
             self.texte.set_underline(True)
 
         if self.energie < 10:
-            self.couleur = pg.Color('Red')
+            self.couleur = pg.Color("Red")
         elif self.energie < 50:
-            self.couleur = pg.Color('Orange3')
+            self.couleur = pg.Color("Orange3")
         elif self.energie < 75:
-            self.couleur = pg.Color('Orange')
+            self.couleur = pg.Color("Orange")
 
         self.image = self.texte.render(text, 0, self.couleur)
 
@@ -64,7 +64,9 @@ class Vie(pg.sprite.Sprite):
 
         self.update()
 
-        self.rect = self.image.get_rect().move(self.joueur.get_pos()[0], self.joueur.get_pos()[1] + 15)
+        self.rect = self.image.get_rect().move(
+            self.joueur.get_pos()[0], self.joueur.get_pos()[1] + 15
+        )
 
     def update(self):
         text = f"Vie: {self.vie}/100"
@@ -73,11 +75,11 @@ class Vie(pg.sprite.Sprite):
             self.texte.set_underline(True)
 
         if self.vie < 10:
-            self.couleur = pg.Color('Red')
+            self.couleur = pg.Color("Red")
         elif self.vie < 50:
-            self.couleur = pg.Color('Orange3')
+            self.couleur = pg.Color("Orange3")
         elif self.vie < 75:
-            self.couleur = pg.Color('Orange')
+            self.couleur = pg.Color("Orange")
 
         self.image = self.texte.render(text, 0, self.couleur)
 

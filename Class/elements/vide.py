@@ -1,4 +1,4 @@
-from Class.constants import *
+from autre.constants import *
 
 
 class Vide(pg.sprite.Sprite):
@@ -7,11 +7,8 @@ class Vide(pg.sprite.Sprite):
         self.pos = (0, 0)
 
         self.tuile = pg.transform.scale(
-            pg.image.load(
-                "{}/vide.png".format(
-                    ACCES_TUILES.format(mode)
-                )
-            ), (LARGEUR_TUILE, HAUTEUR_TUILE)
+            pg.image.load("{}/vide.png".format(ACCES_TUILES.format(mode))),
+            (LARGEUR_TUILE, HAUTEUR_TUILE),
         )
 
     def afficher(self, pos: tuple):
