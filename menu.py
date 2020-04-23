@@ -60,10 +60,11 @@ def page_choix_theme(_fenetre) -> Menu:
         themes,
         type_bouton="select",
         options=[
-            ("Bob l'eponge", "bob"),
-            ("Mario", "mario"),
-            ("Pokemon", "pokemon"),
-            ("Star Wars", "star_wars"),
+            ("Bob l'eponge (cliquer pour changer)", "bob"),
+            ("Mario (cliquer pour changer)", "mario"),
+            ("Pokemon (cliquer pour changer)", "pokemon"),
+            ("Star Wars (cliquer pour changer)", "star_wars"),
+            ("Minecraft (cliquer pour changer)", "minecraft"),
         ],
         identifiant="theme",
     )

@@ -153,7 +153,7 @@ def main(theme: str, id_niveau: int):
 
 if __name__ == "__main__":
     try:
-        main("star_wars", 2)
+        main("minecraft", 1)
     except KeyboardInterrupt:
         pg.quit()
         quit()
