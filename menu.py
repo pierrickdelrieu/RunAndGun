@@ -4,14 +4,17 @@ from Class.Menu import Menu
 pg.init()
 fenetre = pg.display.set_mode(RESOLUTION.size)
 
+theme_choisi = "bob"
+niveau_choisi = 1
+
 
 def quitter():
     pg.quit()
     quit()
 
 
-def page_choix_theme(_fenetre, theme_defaut: str) -> Menu:
-    theme_choisi = theme_defaut
+def page_choix_theme(_fenetre) -> Menu:
+    global theme_choisi
 
     def themes(theme: tuple):
         global theme_choisi
@@ -47,7 +50,7 @@ def page_choix_theme(_fenetre, theme_defaut: str) -> Menu:
         return page_choix_niveau(_fenetre, theme_choisi)
 
     _menu = Menu(_fenetre, couleur_fond=(105, 105, 105))
-    themes((theme_defaut, theme_defaut))
+    themes((theme_choisi, theme_choisi))
 
     _menu.ajout_bouton(
         _menu.couleur_fond,
@@ -69,7 +72,7 @@ def page_choix_theme(_fenetre, theme_defaut: str) -> Menu:
 
 
 def page_choix_niveau(_fenetre, theme: str) -> Menu:
-    niveau_choisi = 1
+    global theme_choisi
 
     def niveau(id_niveau: tuple):
         global niveau_choisi
@@ -103,7 +106,10 @@ def page_choix_niveau(_fenetre, theme: str) -> Menu:
         niveau_choisi = id_niveau[1]
 
     def lancer():
+        print(theme, niveau_choisi)
         from main import main
+
+        print(theme, niveau_choisi)
 
         try:
             main(theme, niveau_choisi)
@@ -135,7 +141,7 @@ def page_choix_niveau(_fenetre, theme: str) -> Menu:
 
 def page_accueil(_fenetre) -> Menu:
     def start():
-        return page_choix_theme(_fenetre, "bob")
+        return page_choix_theme(_fenetre)
 
     fond = pg.Surface(RESOLUTION.size)
     _fenetre.blit(fond, (0, 0))
