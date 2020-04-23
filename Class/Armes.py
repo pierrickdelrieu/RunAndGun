@@ -19,16 +19,16 @@ class Projectile(pg.sprite.Sprite):
     y: float
 
     def __init__(
-        self,
-        screen_rect: pg.Rect,
-        velocity: float,
-        x: float,
-        y: float,
-        angle: int,
-        degats: int,
-        adversaire: tuple,
-        chemin_images: str,
-        monde: list,
+            self,
+            screen_rect: pg.Rect,
+            velocity: float,
+            x: float,
+            y: float,
+            angle: int,
+            degats: int,
+            adversaire: tuple,
+            chemin_images: str,
+            monde: list,
     ):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
@@ -44,15 +44,27 @@ class Projectile(pg.sprite.Sprite):
         self.adversaire = adversaire
 
         self.chemin_images = chemin_images
-        self.image = pg.transform.scale(
-            pg.image.load(
-                self.chemin_images + "/projectile.png"
-            ).convert_alpha(), (32, 32)
-        )
+
+        if self.angle < 90:
+            self.image = pg.transform.scale(
+                pg.image.load(
+                    self.chemin_images + "/projectile.png"
+                ).convert_alpha(), (32, 32)
+            )
+        else:
+            self.image = pg.transform.flip(
+                pg.transform.scale(
+                    pg.image.load(
+                        self.chemin_images + "/projectile.png"
+                    ).convert_alpha(), (32, 32)
+                ),
+                True,
+                False
+            )
 
         self.t = 0.5 if self.angle < 90 else 0.2
 
-        self.rect = self.image.get_rect(center=self.screen_rect.center)
+        self.rect = self.image.get_rect()
 
         self.vx = self.velocity * math.cos(math.radians(self.angle))
         self.vy = self.velocity * math.sin(math.radians(self.angle))
@@ -73,7 +85,7 @@ class Projectile(pg.sprite.Sprite):
         else:
             self.x = self.origin[0] + (self.vx * self.t)
             self.y = self.origin[1] - (
-                self.vy * self.t - (self.gravity / 2) * self.t * self.t
+                    self.vy * self.t - (self.gravity / 2) * self.t * self.t
             )
 
             self.rect.left, self.rect.top = self.x, self.y
@@ -83,15 +95,11 @@ class Projectile(pg.sprite.Sprite):
         for tile in self.monde:
             rect = pg.Rect(tile[0], tile[1], LARGEUR_TUILE, HAUTEUR_TUILE)
 
-            if rect.collidepoint(self.x, self.y + 20):
-                pg.time.wait(1000)
-                self.kill()
-
+            if rect.colliderect(self.rect):
                 self.hit = (1, 0)
 
         if 0 > self.x > self.screen_rect.right or self.y > self.screen_rect.bottom:
             self.hit = (1, 0)
-            self.kill()
 
 
 class Class1(Projectile):
@@ -101,15 +109,15 @@ class Class1(Projectile):
     velocity = 150
 
     def __init__(
-        self,
-        screen_rect: pg.Rect,
-        x: float,
-        y: float,
-        direction: int,
-        angle: int,
-        adversaire: tuple,
-        monde: list,
-        theme: str
+            self,
+            screen_rect: pg.Rect,
+            x: float,
+            y: float,
+            direction: int,
+            angle: int,
+            adversaire: tuple,
+            monde: list,
+            theme: str
     ):
         """
         Projectile de type 1
@@ -143,15 +151,15 @@ class Class2(Projectile):
     velocity = 100
 
     def __init__(
-        self,
-        screen_rect: pg.Rect,
-        x: float,
-        y: float,
-        direction: int,
-        angle: int,
-        adversaire: tuple,
-        monde: list,
-        theme: str
+            self,
+            screen_rect: pg.Rect,
+            x: float,
+            y: float,
+            direction: int,
+            angle: int,
+            adversaire: tuple,
+            monde: list,
+            theme: str
     ):
         """
         Projectile de type 1
@@ -185,15 +193,15 @@ class Class3(Projectile):
     velocity = 95
 
     def __init__(
-        self,
-        screen_rect: pg.Rect,
-        x: float,
-        y: float,
-        direction: int,
-        angle: int,
-        adversaire: tuple,
-        monde: list,
-        theme: str
+            self,
+            screen_rect: pg.Rect,
+            x: float,
+            y: float,
+            direction: int,
+            angle: int,
+            adversaire: tuple,
+            monde: list,
+            theme: str
     ):
         """
         Projectile de type 1

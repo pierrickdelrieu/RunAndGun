@@ -38,7 +38,7 @@ def page_choix_theme(_fenetre) -> Menu:
         _menu.ajout_bouton(
             (50, 220, 60),
             (255, 255, 255),
-            "Suivant",
+            "Valider",
             (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 150),
             selection_niveau,
             identifiant="start",
@@ -121,10 +121,7 @@ def page_choix_niveau(_fenetre, theme: str) -> Menu:
         niveau_choisi = id_niveau[1]
 
     def lancer():
-        print(theme, niveau_choisi)
         from main import main
-
-        print(theme, niveau_choisi)
 
         try:
             main(theme, niveau_choisi)
@@ -144,7 +141,10 @@ def page_choix_niveau(_fenetre, theme: str) -> Menu:
         (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2),
         niveau,
         type_bouton="select",
-        options=[("1", "1"), ("2", "2"),],
+        options=[
+            ("1 (cliquer pour changer)", "1"),
+            ("2 (cliquer pour changer)", "2")
+        ],
         identifiant="niveau",
     )
 
