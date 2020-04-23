@@ -55,7 +55,7 @@ class Vie(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self,)
         self.texte = pg.font.Font(None, 22)
         self.texte.set_bold(1)
-        self.couleur = pg.Color("Black")
+        self.couleur = pg.Color("White")
 
         self.joueur = joueur
         self.screen_rect = screen_rect
@@ -81,7 +81,7 @@ class Vie(pg.sprite.Sprite):
         elif self.vie < 75:
             self.couleur = pg.Color("Orange")
 
-        self.image = self.texte.render(text, 0, self.couleur)
+        self.image = self.texte.render(text, 0, self.couleur, (0, 0, 0))
 
     def move(self, direction):
         self.rect.move_ip(direction * self.joueur.vitesse, 0)

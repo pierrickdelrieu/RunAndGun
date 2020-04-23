@@ -103,7 +103,7 @@ def main(theme: str, id_niveau: int):
 
 if __name__ == "__main__":
     try:
-        main("bob", 2)
+        main("star_wars", 2)
     except KeyboardInterrupt:
         pg.quit()
         quit()

@@ -74,6 +74,12 @@ def page_choix_theme(_fenetre) -> Menu:
 def page_choix_niveau(_fenetre, theme: str) -> Menu:
     global theme_choisi
 
+    def selection_theme():
+        global theme_choisi
+        theme_choisi = "bob"
+        
+        return page_choix_theme(_fenetre)
+
     def niveau(id_niveau: tuple):
         global niveau_choisi
 
@@ -97,8 +103,16 @@ def page_choix_niveau(_fenetre, theme: str) -> Menu:
         _menu.ajout_bouton(
             (50, 220, 60),
             (255, 255, 255),
+            "Retour",
+            (RESOLUTION.size[0] // 2 - 70, RESOLUTION.size[1] // 2 + 150),
+            selection_theme,
+            identifiant="start",
+        )
+        _menu.ajout_bouton(
+            (50, 220, 60),
+            (255, 255, 255),
             "Joueur",
-            (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 150),
+            (RESOLUTION.size[0] // 2 + 70, RESOLUTION.size[1] // 2 + 150),
             lancer,
             identifiant="start",
         )
