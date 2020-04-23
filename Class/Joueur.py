@@ -2,12 +2,21 @@ from autre.constants import *
 
 
 class Joueur(pg.sprite.Sprite):
+    containers: any
+
     vitesse = 5
     bonds = 10
 
     is_shooting: bool = False
 
-    def __init__(self, screen_rect, pos: tuple, textures, regarde: int, peau: str):
+    def __init__(
+        self,
+        screen_rect: pg.Rect,
+        pos: tuple,
+        textures,
+        regarde: int,
+        peau: int
+    ):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
 
@@ -24,8 +33,6 @@ class Joueur(pg.sprite.Sprite):
         self.en_vie = True
 
     def move(self, direction, world):
-        print(self.get_pos())
-        print(world)
         if direction:
             self.regarde = direction
         self.rect.move_ip(direction * self.vitesse, 0)
@@ -39,16 +46,25 @@ class Joueur(pg.sprite.Sprite):
         self.rect.top = self.orig_top - (self.rect.left // self.bonds % 2)
 
     def get_pos(self):
-        pos = (self.rect.left, self.rect.top)
+        pos = (self.rect.center[0] - LARGEUR_JOUEUR // 2, self.rect.center[1] - HAUTEUR_JOUEUR // 2)
         return pos
 
 
 class Bras(pg.sprite.Sprite):
+    containers: any
+
     angle = 0
     vitesse = 5
     bonds = 10
 
-    def __init__(self, screen_rect, pos: tuple, textures, regarde: int, peau: str):
+    def __init__(
+        self,
+        screen_rect: pg.Rect,
+        pos: tuple,
+        textures,
+        regarde: int,
+        peau: int
+    ):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
 

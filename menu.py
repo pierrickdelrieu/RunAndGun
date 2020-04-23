@@ -163,7 +163,7 @@ def page_accueil(_fenetre) -> Menu:
     _menu.ajout_texte(
         _menu.couleur_fond,
         (190, 190, 70),
-        "Sourcecodester",
+        "Projet Transverse !",
         (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 200),
     )
 

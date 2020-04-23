@@ -13,6 +13,7 @@ RESOLUTION = pg.Rect(
 ACCES_TUILES = "themes/{}/tuiles"
 ACCES_TERRAINS = "themes/{}/terrains"
 ACCES_JOUEUR = "themes/{}/joueur"
+ACCES_ARMES = "themes/{}/armes"
 
 LARGEUR_JOUEUR = 96
 HAUTEUR_JOUEUR = 96

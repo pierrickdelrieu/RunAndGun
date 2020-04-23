@@ -1,5 +1,4 @@
-import pygame as pg
-
+from autre.constants import *
 from .Joueur import Joueur
 
 
@@ -44,6 +43,24 @@ class Energie(pg.sprite.Sprite):
             self.couleur = pg.Color("Orange3")
         elif self.energie < 75:
             self.couleur = pg.Color("Orange")
+
+        self.image = self.texte.render(text, 0, self.couleur)
+
+
+class Arme(pg.sprite.Sprite):
+    image: pg.Surface
+
+    def __init__(self):
+        pg.sprite.Sprite.__init__(self)
+        self.texte = pg.font.Font(None, 40)
+        self.texte.set_bold(1)
+        self.couleur = pg.Color("Black")
+        self.arme = 1
+        self.update()
+        self.rect = self.image.get_rect().move(RESOLUTION.size[0] - 150, 10)
+
+    def update(self):
+        text = f"Arme: {self.arme}"
 
         self.image = self.texte.render(text, 0, self.couleur)
 

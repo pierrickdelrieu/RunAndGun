@@ -1,5 +1,5 @@
-from Class.Armes import Tomato
-from Class.GUI import Angle, Energie, Vie
+from Class.Armes import Class1, Class2, Class3
+from Class.GUI import Angle, Energie, Vie, Arme
 
 from autre.utils import *
 
@@ -14,8 +14,6 @@ def main(theme: str, id_niveau: int):
     tour = 1
 
     chargement(fenetre, 1)
-
-    print(theme, id_niveau)
 
     monde, fond = chargement_niveau(fenetre, theme, id_niveau)
     texture_joueurs, texture_bras = chargement_textures(fenetre, theme)
@@ -35,6 +33,10 @@ def main(theme: str, id_niveau: int):
 
     angle_gui = Angle()
     energie_gui = Energie()
+    arme_gui = Arme()
+
+    armes = [Class1, Class2, Class3]
+    arme = armes[0]
 
     joueur1_vie = Vie(fenetre.get_rect(), joueur1_corps)
     joueur2_vie = Vie(fenetre.get_rect(), joueur2_corps)
@@ -44,9 +46,14 @@ def main(theme: str, id_niveau: int):
         2: [joueur2_corps, joueur2_bras, joueur2_vie],
     }
 
+    Class1.containers = toutes_les_images
+    Class2.containers = toutes_les_images
+    Class3.containers = toutes_les_images
+
     if pg.font:
         toutes_les_images.add(angle_gui)
         toutes_les_images.add(energie_gui)
+        toutes_les_images.add(arme_gui)
         toutes_les_images.add(joueurs.get(1)[2])
         toutes_les_images.add(joueurs.get(2)[2])
 
@@ -78,24 +85,67 @@ def main(theme: str, id_niveau: int):
             )
             angle_gui.angle = joueurs.get(tour)[1].angle
 
+            # changement d'arme (si la touche "a" est pressé, on prend l'arme precedent, si c'est "z", on prend la
+            # suivante
+            if touche_presse[pg.K_a]:
+                selection = armes.index(arme)
+
+                if selection == 0:
+                    selection = len(armes) - 1
+                else:
+                    selection -= 1
+
+                arme = armes[selection]
+
+                arme_gui.arme = selection
+                pg.time.wait(200)
+            elif touche_presse[pg.K_z]:
+                selection = armes.index(arme)
+
+                if selection == len(armes) - 1:
+                    selection = 0
+                else:
+                    selection += 1
+
+                arme = armes[selection]
+
+                arme_gui.arme = selection + 1
+                pg.time.wait(200)
+
+            # feu !
             if touche_presse[pg.K_SPACE]:
                 joueurs.get(tour)[0].is_shooting = True
-                tomato = Tomato(
+                projectile = arme(
                     screen_rect=fenetre.get_rect(),
-                    velocity=150,
                     x=joueurs.get(tour)[0].get_pos()[0],
                     y=joueurs.get(tour)[0].get_pos()[1],
                     direction=joueurs.get(tour)[0].regarde,
                     angle=joueurs.get(tour)[1].angle,
-                    adv=joueurs.get(tour % 2 + 1)[0].get_pos(),
-                    world=monde.hit_box(),
+                    adversaire=joueurs.get(tour % 2 + 1)[0].get_pos(),
+                    monde=monde.hit_box(),
+                    theme=theme
                 )
-                tomato.update()
+                projectile.update()
+
+        elif projectile.hit[0]:
+            joueurs.get(tour)[0].is_shooting = False
+            joueurs.get(tour)[0].energie = 100
+
+            if projectile.hit[1]:
+                joueurs.get(tour % 2 + 1)[2].vie -= projectile.degats
+                joueurs.get(tour % 2 + 1)[2].update()
+
+            if joueurs.get(tour % 2 + 1)[2].vie <= 0:
+                victoire(fenetre, tour)
+
+            tour = tour % 2 + 1
+
+            projectile.kill()
 
         floor = toutes_les_images.draw(fenetre)
         pg.display.update(floor)
 
-        clock.tick(10)
+        clock.tick(20)
 
     pg.time.wait(1000)
     pg.quit()
