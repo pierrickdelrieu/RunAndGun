@@ -77,7 +77,7 @@ def page_choix_niveau(_fenetre, theme: str) -> Menu:
     def selection_theme():
         global theme_choisi
         theme_choisi = "bob"
-        
+
         return page_choix_theme(_fenetre)
 
     def niveau(id_niveau: tuple):
@@ -143,10 +143,7 @@ def page_choix_niveau(_fenetre, theme: str) -> Menu:
         (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2),
         niveau,
         type_bouton="select",
-        options=[
-            ("1", "1"),
-            ("2", "2"),
-        ],
+        options=[("1", "1"), ("2", "2"),],
         identifiant="niveau",
     )
 
