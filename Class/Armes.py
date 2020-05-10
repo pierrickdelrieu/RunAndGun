@@ -45,22 +45,11 @@ class Projectile(pg.sprite.Sprite):
 
         self.chemin_images = chemin_images
 
-        if self.angle < 90:
-            self.image = pg.transform.scale(
-                pg.image.load(
-                    self.chemin_images + "/projectile.png"
-                ).convert_alpha(), (32, 32)
-            )
-        else:
-            self.image = pg.transform.flip(
-                pg.transform.scale(
-                    pg.image.load(
-                        self.chemin_images + "/projectile.png"
-                    ).convert_alpha(), (32, 32)
-                ),
-                True,
-                False
-            )
+        self.image = pg.transform.scale(
+            pg.image.load(
+                self.chemin_images + "/projectile.png"
+            ).convert_alpha(), (32, 32)
+        )
 
         self.t = 0.5 if self.angle < 90 else 0.2
 
@@ -83,6 +72,23 @@ class Projectile(pg.sprite.Sprite):
 
             self.hit = (1, 1)
         else:
+            if self.angle < 90:
+                self.image = pg.transform.scale(
+                    pg.image.load(
+                        self.chemin_images + "/projectile.png"
+                    ).convert_alpha(), (32, 32)
+                )
+            else:
+                self.image = pg.transform.flip(
+                    pg.transform.scale(
+                        pg.image.load(
+                            self.chemin_images + "/projectile.png"
+                        ).convert_alpha(), (32, 32)
+                    ),
+                    True,
+                    False
+                )
+
             self.x = self.origin[0] + (self.vx * self.t)
             self.y = self.origin[1] - (
                     self.vy * self.t - (self.gravity / 2) * self.t * self.t
@@ -102,7 +108,7 @@ class Projectile(pg.sprite.Sprite):
             self.hit = (1, 0)
 
 
-class Class1(Projectile):
+class Type1(Projectile):
     containers: any
 
     degats = 10
@@ -144,7 +150,7 @@ class Class1(Projectile):
         )
 
 
-class Class2(Projectile):
+class Type2(Projectile):
     containers: any
 
     degats = 20
@@ -186,7 +192,7 @@ class Class2(Projectile):
         )
 
 
-class Class3(Projectile):
+class Type3(Projectile):
     containers: any
 
     degats = 30

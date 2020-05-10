@@ -1,5 +1,5 @@
-from Class.Armes import Class1, Class2, Class3
-from Class.GUI import VieGUI, EnergieGUI, ArmeGUI, TourGUI
+from Class.Armes import Type1, Type2, Type3
+from Class.GUI import VieGUI, EnergieGUI, ArmeGUI, TourGUI, AideGUI
 
 from autre.utils import *
 
@@ -31,7 +31,7 @@ def main(theme: str, id_niveau: int):
     texte = pg.font.Font(None, 20)
     texte.set_italic(True)
 
-    armes = [Class1, Class2, Class3]
+    armes = [Type1, Type2, Type3]
 
     joueur1_energie = EnergieGUI(fenetre.get_rect(), joueur1_corps)
     joueur2_energie = EnergieGUI(fenetre.get_rect(), joueur2_corps)
@@ -45,9 +45,9 @@ def main(theme: str, id_niveau: int):
     arme_gui = ArmeGUI(theme)
     tour_gui = TourGUI()
 
-    Class1.containers = toutes_les_images
-    Class2.containers = toutes_les_images
-    Class3.containers = toutes_les_images
+    Type1.containers = toutes_les_images
+    Type2.containers = toutes_les_images
+    Type3.containers = toutes_les_images
 
     if pg.font:
         toutes_les_images.add(vie_gui)
@@ -56,6 +56,8 @@ def main(theme: str, id_niveau: int):
 
         toutes_les_images.add(joueurs.get(1)[2])
         toutes_les_images.add(joueurs.get(2)[2])
+
+        toutes_les_images.add(AideGUI())
 
     while joueurs.get(tour)[0].vie > 0:
         pg.display.set_caption(f"Projet Transverse! - fps:{round(clock.get_fps())}")
@@ -66,6 +68,7 @@ def main(theme: str, id_niveau: int):
                 return
 
         tour_gui.tour = tour
+        arme_gui.arme = armes.index(joueurs.get(tour)[3]) + 1
 
         touche_presse = pg.key.get_pressed()
         toutes_les_images.clear(fenetre, fond)
@@ -75,12 +78,17 @@ def main(theme: str, id_niveau: int):
             direction = touche_presse[pg.K_RIGHT] - touche_presse[pg.K_LEFT]
 
             joueurs.get(tour)[0].move(direction, monde.hit_box())
-            joueurs.get(tour)[1].move(direction)
+            joueurs.get(tour)[1].move(direction, monde.hit_box())
             joueurs.get(tour)[2].move(direction)
 
             joueurs.get(tour)[2].energie = joueurs.get(tour)[0].energie
 
         if not joueurs.get(tour)[0].is_shooting:
+            if "projectile" in locals():
+                pg.time.wait(1000)
+                projectile.kill()
+                del projectile
+
             joueurs.get(tour)[1].rotate(
                 touche_presse[pg.K_UP] - touche_presse[pg.K_DOWN]
             )
@@ -111,6 +119,31 @@ def main(theme: str, id_niveau: int):
                 arme_gui.arme = selection + 1
 
                 pg.time.wait(200)
+            elif touche_presse[pg.K_i]:
+                info = Menu(fenetre, couleur_fond=(105, 105, 105))
+                info.ajout_texte(
+                    None,
+                    (190, 190, 70),
+                    f"Appuyez sur I pour retourner au jeu",
+                    (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 150),
+                )
+                info.ajout_texte(
+                    None,
+                    (190, 190, 70),
+                    f"Portée: {joueurs.get(tour)[3].velocity}",
+                    (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 20),
+                )
+                info.ajout_texte(
+                    None,
+                    (190, 190, 70),
+                    f"Dégats: {joueurs.get(tour)[3].degats}",
+                    (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 20),
+                )
+                pg.display.flip()
+
+                pg.time.wait(2000)
+                fenetre.blit(fond, (0, 0))
+                pg.display.flip()
 
             # feu !
             if touche_presse[pg.K_SPACE]:
@@ -125,7 +158,6 @@ def main(theme: str, id_niveau: int):
                     monde=monde.hit_box(),
                     theme=theme
                 )
-                projectile.update()
 
         elif projectile.hit[0]:
             joueurs.get(tour)[0].is_shooting = False
@@ -139,16 +171,10 @@ def main(theme: str, id_niveau: int):
 
             tour = tour % 2 + 1
 
-            pg.time.wait(1000)
-            projectile.kill()
-
         floor = toutes_les_images.draw(fenetre)
         pg.display.update(floor)
 
         clock.tick(20)
-
-    pg.time.wait(1000)
-    pg.quit()
 
 
 if __name__ == "__main__":

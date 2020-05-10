@@ -68,7 +68,6 @@ class ArmeGUI(pg.sprite.Sprite):
 
     def update(self):
         texte = self.texte.render(f"Arme: ", 0, self.couleur)
-
         self.image = pg.Surface(
             (
                 texte.get_width() + 100,
@@ -76,13 +75,11 @@ class ArmeGUI(pg.sprite.Sprite):
             ),
             pg.SRCALPHA
         )
-
         arme = pg.transform.scale(
             pg.image.load(
                 f"{ACCES_ARMES.format(self.theme)}/{self.arme}/projectile.png"
             ).convert_alpha(), (26, 26)
         )
-
         self.image.blit(texte, (0, 0))
         self.image.blit(arme, (texte.get_width(), 0))
 
@@ -160,3 +157,26 @@ class EnergieGUI(pg.sprite.Sprite):
             self.joueur.energie -= 1
 
         self.rect.top = self.joueur.orig_top
+
+
+class AideGUI(pg.sprite.Sprite):
+    image: pg.Surface
+
+    def __init__(self):
+        pg.sprite.Sprite.__init__(self)
+        self.texte = pg.font.Font(None, 30)
+        self.texte.set_bold(1)
+        self.couleur = pg.Color("Black")
+
+        self.update()
+        self.rect = self.image.get_rect().move(
+            10,
+            RESOLUTION.size[1] - 20
+        )
+
+    def update(self):
+        texte = f"A: arme précédente | Z: arme suivante | I: info sur l'arme"
+
+        self.image = self.texte.render(texte, 0, self.couleur)
+
+
