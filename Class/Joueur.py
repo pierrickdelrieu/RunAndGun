@@ -32,7 +32,6 @@ class Joueur(pg.sprite.Sprite):
         )
         self.energie = 100
         self.vie = 100
-        self.orig_top = self.rect.top
         self.en_vie = True
 
     def move(self, direction, monde):
@@ -45,8 +44,7 @@ class Joueur(pg.sprite.Sprite):
 
         if direction != 0:
             self.energie -= 1
-
-        self.rect.top = self.orig_top - (self.rect.left // self.bonds % 2)
+            self.rect.top += 1 if self.rect.left % 2 else -1
 
         sol = (
             max(
@@ -64,9 +62,7 @@ class Joueur(pg.sprite.Sprite):
             self.rect.top += HAUTEUR_TUILE
 
     def get_pos(self):
-        pos = (self.rect.center[0] - LARGEUR_JOUEUR // 2,
-               self.rect.center[1] - HAUTEUR_JOUEUR // 2)
-        return pos
+        return self.rect.center
 
 
 class Bras(pg.sprite.Sprite):
@@ -96,18 +92,16 @@ class Bras(pg.sprite.Sprite):
             midbottom=(
                 (pos[0] + 1) * LARGEUR_TUILE, (pos[1] + 1) * HAUTEUR_TUILE)
         )
-        self.origtop = self.rect.top
 
     def move(self, direction, monde):
         if direction:
             self.regarde = direction
+            self.rect.top += 1 if self.rect.left % 2 else -1
 
         self.rect.move_ip(direction * self.vitesse, 0)
         self.rect = self.rect.clamp(self.screen_rect)
 
         self.image = self.images[self.regarde][self.angle]
-
-        self.rect.top = self.origtop - (self.rect.left // self.bonds % 2)
 
         sol = (
             max(
@@ -134,5 +128,4 @@ class Bras(pg.sprite.Sprite):
                 pg.time.wait(100)
 
     def get_pos(self):
-        pos = (self.rect.left, self.rect.top)
-        return pos
+        return self.rect.center

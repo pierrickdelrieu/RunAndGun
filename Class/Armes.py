@@ -34,8 +34,8 @@ class Projectile(pg.sprite.Sprite):
         self.screen_rect = screen_rect
 
         self.velocity = velocity
-        self.x = x + 10
-        self.y = y + 42
+        self.x = x
+        self.y = y
         self.origin = (self.x, self.y)
         self.degats = degats
         self.angle = angle
@@ -51,7 +51,7 @@ class Projectile(pg.sprite.Sprite):
             ).convert_alpha(), (32, 32)
         )
 
-        self.t = 0.5 if self.angle < 90 else 0.2
+        self.t = 0.5
 
         self.rect = self.image.get_rect()
 
@@ -59,9 +59,12 @@ class Projectile(pg.sprite.Sprite):
         self.vy = self.velocity * math.sin(math.radians(self.angle))
 
     def update(self):
-        adv = pg.Rect(self.adversaire[0], self.adversaire[1], LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
+        adv = pg.Rect(
+            self.adversaire[0] - LARGEUR_JOUEUR // 2,
+            self.adversaire[1] - HAUTEUR_JOUEUR // 2,
+            LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
 
-        if adv.colliderect(self.rect):
+        if adv.collidepoint(*self.rect.center):
             self.image = pg.transform.scale(
                 pg.image.load(
                     self.chemin_images + "/explosion.png"
@@ -101,7 +104,7 @@ class Projectile(pg.sprite.Sprite):
         for tile in self.monde:
             rect = pg.Rect(tile[0], tile[1], LARGEUR_TUILE, HAUTEUR_TUILE)
 
-            if rect.colliderect(self.rect):
+            if rect.collidepoint(*self.rect.center):
                 self.hit = (1, 0)
 
         if 0 > self.x > self.screen_rect.right or self.y > self.screen_rect.bottom:

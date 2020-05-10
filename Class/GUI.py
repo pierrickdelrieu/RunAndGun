@@ -120,7 +120,8 @@ class EnergieGUI(pg.sprite.Sprite):
         self.update()
 
         self.rect = self.image.get_rect().move(
-            self.joueur.get_pos()[0], self.joueur.get_pos()[1] + 15
+            self.joueur.get_pos()[0] - LARGEUR_JOUEUR // 2,
+            self.joueur.get_pos()[1] - HAUTEUR_JOUEUR // 2 + 15
         )
 
     def update(self):
@@ -156,7 +157,7 @@ class EnergieGUI(pg.sprite.Sprite):
         if direction != 0:
             self.joueur.energie -= 1
 
-        self.rect.top = self.joueur.orig_top
+        self.rect.top = self.joueur.rect.top
 
 
 class AideGUI(pg.sprite.Sprite):
