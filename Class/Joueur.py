@@ -58,8 +58,23 @@ class Joueur(pg.sprite.Sprite):
             )
         )
 
+        obstacle = (
+            max(
+                pg.Rect(
+                    tile[0], tile[1], LARGEUR_TUILE, HAUTEUR_TUILE
+                ).collidepoint(
+                    self.rect.center[0],
+                    self.rect.center[1] + HAUTEUR_JOUEUR // 2
+                )
+                for tile in monde
+            )
+        )
+
         if not sol:
             self.rect.top += HAUTEUR_TUILE
+
+        if sol and obstacle:
+            self.rect.top -= HAUTEUR_TUILE
 
     def get_pos(self):
         return self.rect.center
@@ -115,8 +130,24 @@ class Bras(pg.sprite.Sprite):
             )
         )
 
+        obstacle = (
+            max(
+                pg.Rect(
+                    tile[0], tile[1], LARGEUR_TUILE, HAUTEUR_TUILE
+                ).collidepoint(
+                    self.rect.center[0],
+                    self.rect.center[1] + HAUTEUR_JOUEUR // 2
+                )
+                for tile in monde
+            )
+        )
+
         if not sol:
             self.rect.top += HAUTEUR_TUILE
+
+        if sol and obstacle:
+            self.rect.top -= HAUTEUR_TUILE
+
 
     def rotate(self, angle):
         if angle != 0:
