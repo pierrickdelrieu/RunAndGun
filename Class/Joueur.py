@@ -64,7 +64,7 @@ class Joueur(pg.sprite.Sprite):
                     tile[0], tile[1], LARGEUR_TUILE, HAUTEUR_TUILE
                 ).collidepoint(
                     self.rect.center[0],
-                    self.rect.center[1] + HAUTEUR_JOUEUR // 2
+                    self.rect.center[1] + HAUTEUR_JOUEUR // 3
                 )
                 for tile in monde
             )
@@ -136,7 +136,7 @@ class Bras(pg.sprite.Sprite):
                     tile[0], tile[1], LARGEUR_TUILE, HAUTEUR_TUILE
                 ).collidepoint(
                     self.rect.center[0],
-                    self.rect.center[1] + HAUTEUR_JOUEUR // 2
+                    self.rect.center[1] + HAUTEUR_JOUEUR // 3
                 )
                 for tile in monde
             )
