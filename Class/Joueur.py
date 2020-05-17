@@ -10,12 +10,7 @@ class Joueur(pg.sprite.Sprite):
     is_shooting: bool = False
 
     def __init__(
-            self,
-            screen_rect: pg.Rect,
-            pos: tuple,
-            textures,
-            regarde: int,
-            peau: int
+        self, screen_rect: pg.Rect, pos: tuple, textures, regarde: int, peau: int
     ):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
@@ -25,10 +20,7 @@ class Joueur(pg.sprite.Sprite):
         self.image = textures.get(self.regarde)
 
         self.rect = self.image.get_rect(
-            midbottom=(
-                (pos[0] + 1) * LARGEUR_TUILE,
-                (pos[1] + 1) * HAUTEUR_TUILE
-            )
+            midbottom=((pos[0] + 1) * LARGEUR_TUILE, (pos[1] + 1) * HAUTEUR_TUILE)
         )
         self.energie = 100
         self.vie = 100
@@ -46,28 +38,18 @@ class Joueur(pg.sprite.Sprite):
             self.energie -= 1
             self.rect.top += 1 if self.rect.left % 2 else -1
 
-        sol = (
-            max(
-                pg.Rect(
-                    tile[0], tile[1] - 10, LARGEUR_TUILE, HAUTEUR_TUILE
-                ).collidepoint(
-                    self.rect.center[0],
-                    self.rect.center[1] + HAUTEUR_JOUEUR // 2
-                )
-                for tile in monde
+        sol = max(
+            pg.Rect(tile[0], tile[1] - 10, LARGEUR_TUILE, HAUTEUR_TUILE).collidepoint(
+                self.rect.center[0], self.rect.center[1] + HAUTEUR_JOUEUR // 2
             )
+            for tile in monde
         )
 
-        obstacle = (
-            max(
-                pg.Rect(
-                    tile[0], tile[1], LARGEUR_TUILE, HAUTEUR_TUILE
-                ).collidepoint(
-                    self.rect.center[0],
-                    self.rect.center[1] + HAUTEUR_JOUEUR // 3
-                )
-                for tile in monde
+        obstacle = max(
+            pg.Rect(tile[0], tile[1], LARGEUR_TUILE, HAUTEUR_TUILE).collidepoint(
+                self.rect.center[0], self.rect.center[1] + HAUTEUR_JOUEUR // 3
             )
+            for tile in monde
         )
 
         if not sol:
@@ -88,12 +70,7 @@ class Bras(pg.sprite.Sprite):
     bonds = 10
 
     def __init__(
-            self,
-            screen_rect: pg.Rect,
-            pos: tuple,
-            textures,
-            regarde: int,
-            peau: int
+        self, screen_rect: pg.Rect, pos: tuple, textures, regarde: int, peau: int
     ):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
@@ -104,8 +81,7 @@ class Bras(pg.sprite.Sprite):
 
         self.image = self.images.get(regarde).get(self.angle)
         self.rect = self.image.get_rect(
-            midbottom=(
-                (pos[0] + 1) * LARGEUR_TUILE, (pos[1] + 1) * HAUTEUR_TUILE)
+            midbottom=((pos[0] + 1) * LARGEUR_TUILE, (pos[1] + 1) * HAUTEUR_TUILE)
         )
 
     def move(self, direction, monde):
@@ -118,28 +94,18 @@ class Bras(pg.sprite.Sprite):
 
         self.image = self.images[self.regarde][self.angle]
 
-        sol = (
-            max(
-                pg.Rect(
-                    tile[0], tile[1] - 10, LARGEUR_TUILE, HAUTEUR_TUILE
-                ).collidepoint(
-                    self.rect.center[0],
-                    self.rect.center[1] + HAUTEUR_JOUEUR // 2
-                )
-                for tile in monde
+        sol = max(
+            pg.Rect(tile[0], tile[1] - 10, LARGEUR_TUILE, HAUTEUR_TUILE).collidepoint(
+                self.rect.center[0], self.rect.center[1] + HAUTEUR_JOUEUR // 2
             )
+            for tile in monde
         )
 
-        obstacle = (
-            max(
-                pg.Rect(
-                    tile[0], tile[1], LARGEUR_TUILE, HAUTEUR_TUILE
-                ).collidepoint(
-                    self.rect.center[0],
-                    self.rect.center[1] + HAUTEUR_JOUEUR // 3
-                )
-                for tile in monde
+        obstacle = max(
+            pg.Rect(tile[0], tile[1], LARGEUR_TUILE, HAUTEUR_TUILE).collidepoint(
+                self.rect.center[0], self.rect.center[1] + HAUTEUR_JOUEUR // 3
             )
+            for tile in monde
         )
 
         if not sol:
@@ -147,7 +113,6 @@ class Bras(pg.sprite.Sprite):
 
         if sol and obstacle:
             self.rect.top -= HAUTEUR_TUILE
-
 
     def rotate(self, angle):
         if angle != 0:

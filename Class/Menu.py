@@ -143,6 +143,16 @@ class Bouton:
 
                 pg.draw.rect(self.fenetre, couleur_fond, rect_fond_titre)
 
+            elif len(marges) == 5:
+                rect_fond_titre = pg.Rect(
+                    self.rect_titre[0] - marges[3],
+                    self.rect_titre[1] - marges[0],
+                    self.rect_titre[2] + marges[1],
+                    self.rect_titre[3] + marges[2],
+                )
+
+                pg.draw.rect(self.fenetre, couleur_fond, rect_fond_titre, marges[4])
+
         self.fenetre.blit(titre, self.rect_titre)
 
         pg.display.flip()
@@ -172,14 +182,14 @@ class BoutonSelect(Bouton):
         self.texte_base = self.texte
         self.texte = self.texte_base + self.options[self.choisie % len(self.options)][0]
 
-        self.affiche(self.couleur_fond, self.couleur_texte, (0, 100))
+        self.affiche(self.couleur_fond, self.couleur_texte, (10, 20))
 
     def click(self):
         global BOUTON_PRESS
 
         couleur_texte_survol = generation_couleur_survol(self.couleur_texte)
 
-        self.affiche(self.couleur_fond, couleur_texte_survol, (0, 100))
+        self.affiche(self.couleur_fond, couleur_texte_survol, (10, 20))
 
         if pg.mouse.get_pressed()[0] and not BOUTON_PRESS:
             BOUTON_PRESS = True
@@ -195,6 +205,28 @@ class BoutonSelect(Bouton):
         elif not pg.mouse.get_pressed()[0]:
             BOUTON_PRESS = False
             return [0, self.identifiant, None]
+
+
+class Image:
+    def __init__(self, fenetre, texture: pg.Surface, pos: tuple, **kwargs):
+        """
+        Image pour le menu
+
+        Args:
+            fenetre: -
+            texture (pg.Surface): Image a afficher
+            pos (tuple): Position de l'image
+            **kwargs:
+        """
+
+        self.fenetre = fenetre
+        self.texture = texture
+
+        self.rect_image = self.texture.get_rect()
+        self.rect_image.center = pos
+
+        self.fenetre.blit(self.texture, self.rect_image)
+        pg.display.flip()
 
 
 class Menu:
@@ -219,6 +251,9 @@ class Menu:
 
     def ajout_texte(self, *args, **kwargs):
         Texte(self.fenetre, *args, **kwargs)
+
+    def ajout_image(self, *args, **kwargs):
+        Image(self.fenetre, *args, **kwargs)
 
     def ajout_bouton(self, *args, **kwargs):
         if kwargs.get("type_bouton") == "select":

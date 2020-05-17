@@ -53,7 +53,7 @@ def page_choix_theme(_fenetre) -> Menu:
     themes((theme_choisi, theme_choisi))
 
     _menu.ajout_bouton(
-        _menu.couleur_fond,
+        (25, 25, 25, 1),
         (255, 255, 255),
         "",
         (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2),
@@ -141,10 +141,7 @@ def page_choix_niveau(_fenetre, theme: str) -> Menu:
         (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2),
         niveau,
         type_bouton="select",
-        options=[
-            ("1 (cliquer pour changer)", "1"),
-            ("2 (cliquer pour changer)", "2")
-        ],
+        options=[("1 (cliquer pour changer)", "1"), ("2 (cliquer pour changer)", "2")],
         identifiant="niveau",
     )
 

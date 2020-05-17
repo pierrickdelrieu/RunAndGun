@@ -11,7 +11,10 @@ class Projectile(pg.sprite.Sprite):
     gravity = 9.81
     angle: int
     velocity: float
-    hit = (0, 0)  # indice 0 : le projectile a t'il touché quelque chose ? indice 1 : est-ce un joueur que ca a touche ?
+    hit = (
+        0,
+        0,
+    )  # indice 0 : le projectile a t'il touché quelque chose ? indice 1 : est-ce un joueur que ca a touche ?
 
     degats: int
 
@@ -19,16 +22,16 @@ class Projectile(pg.sprite.Sprite):
     y: float
 
     def __init__(
-            self,
-            screen_rect: pg.Rect,
-            velocity: float,
-            x: float,
-            y: float,
-            angle: int,
-            degats: int,
-            adversaire: tuple,
-            chemin_images: str,
-            monde: list,
+        self,
+        screen_rect: pg.Rect,
+        velocity: float,
+        x: float,
+        y: float,
+        angle: int,
+        degats: int,
+        adversaire: tuple,
+        chemin_images: str,
+        monde: list,
     ):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
@@ -46,9 +49,8 @@ class Projectile(pg.sprite.Sprite):
         self.chemin_images = chemin_images
 
         self.image = pg.transform.scale(
-            pg.image.load(
-                self.chemin_images + "/projectile.png"
-            ).convert_alpha(), (32, 32)
+            pg.image.load(self.chemin_images + "/projectile.png").convert_alpha(),
+            (32, 32),
         )
 
         self.t = 0.5
@@ -62,13 +64,13 @@ class Projectile(pg.sprite.Sprite):
         adv = pg.Rect(
             self.adversaire[0] - LARGEUR_JOUEUR // 2,
             self.adversaire[1] - HAUTEUR_JOUEUR // 2,
-            LARGEUR_JOUEUR, HAUTEUR_JOUEUR)
+            LARGEUR_JOUEUR,
+            HAUTEUR_JOUEUR,
+        )
 
         if adv.collidepoint(*self.rect.center):
             self.image = pg.transform.scale(
-                pg.image.load(
-                    self.chemin_images + "/explosion.png"
-                ).convert_alpha(),
+                pg.image.load(self.chemin_images + "/explosion.png").convert_alpha(),
                 (64, 64),
             )
             self.vx, self.vy = 0, 0
@@ -79,22 +81,24 @@ class Projectile(pg.sprite.Sprite):
                 self.image = pg.transform.scale(
                     pg.image.load(
                         self.chemin_images + "/projectile.png"
-                    ).convert_alpha(), (32, 32)
+                    ).convert_alpha(),
+                    (32, 32),
                 )
             else:
                 self.image = pg.transform.flip(
                     pg.transform.scale(
                         pg.image.load(
                             self.chemin_images + "/projectile.png"
-                        ).convert_alpha(), (32, 32)
+                        ).convert_alpha(),
+                        (32, 32),
                     ),
                     True,
-                    False
+                    False,
                 )
 
             self.x = self.origin[0] + (self.vx * self.t)
             self.y = self.origin[1] - (
-                    self.vy * self.t - (self.gravity / 2) * self.t * self.t
+                self.vy * self.t - (self.gravity / 2) * self.t * self.t
             )
 
             self.rect.left, self.rect.top = self.x, self.y
@@ -115,18 +119,18 @@ class Type1(Projectile):
     containers: any
 
     degats = 10
-    velocity = 150
+    velocity = 200
 
     def __init__(
-            self,
-            screen_rect: pg.Rect,
-            x: float,
-            y: float,
-            direction: int,
-            angle: int,
-            adversaire: tuple,
-            monde: list,
-            theme: str
+        self,
+        screen_rect: pg.Rect,
+        x: float,
+        y: float,
+        direction: int,
+        angle: int,
+        adversaire: tuple,
+        monde: list,
+        theme: str,
     ):
         """
         Projectile de type 1
@@ -160,15 +164,15 @@ class Type2(Projectile):
     velocity = 100
 
     def __init__(
-            self,
-            screen_rect: pg.Rect,
-            x: float,
-            y: float,
-            direction: int,
-            angle: int,
-            adversaire: tuple,
-            monde: list,
-            theme: str
+        self,
+        screen_rect: pg.Rect,
+        x: float,
+        y: float,
+        direction: int,
+        angle: int,
+        adversaire: tuple,
+        monde: list,
+        theme: str,
     ):
         """
         Projectile de type 1
@@ -202,15 +206,15 @@ class Type3(Projectile):
     velocity = 95
 
     def __init__(
-            self,
-            screen_rect: pg.Rect,
-            x: float,
-            y: float,
-            direction: int,
-            angle: int,
-            adversaire: tuple,
-            monde: list,
-            theme: str
+        self,
+        screen_rect: pg.Rect,
+        x: float,
+        y: float,
+        direction: int,
+        angle: int,
+        adversaire: tuple,
+        monde: list,
+        theme: str,
     ):
         """
         Projectile de type 1
