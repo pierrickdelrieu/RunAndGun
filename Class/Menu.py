@@ -23,13 +23,13 @@ def generation_couleur_survol(couleur: tuple) -> tuple:
 
 class Texte:
     def __init__(
-        self,
-        fenetre,
-        couleur_fond: tuple,
-        couleur_texte: tuple,
-        texte: str,
-        pos: tuple,
-        **kwargs
+            self,
+            fenetre,
+            couleur_fond: tuple,
+            couleur_texte: tuple,
+            texte: str,
+            pos: tuple,
+            **kwargs
     ):
         """
         Bouton pour le menu
@@ -45,6 +45,8 @@ class Texte:
         self.fenetre = fenetre
         self.couleur_fond = couleur_fond
         self.couleur_texte = couleur_texte
+
+        self.pos = pos
 
         self.texte = texte
         style_police = (
@@ -61,25 +63,25 @@ class Texte:
             self.texte, True, self.couleur_texte, self.couleur_fond
         )
         self.rect_titre = self.titre.get_rect()
-        self.rect_titre.center = pos
+
+    def affiche(self):
+        self.rect_titre.x = self.pos[0] - self.rect_titre.w // 2
+        self.rect_titre.y = self.pos[1] - self.rect_titre.h // 2
 
         self.fenetre.blit(self.titre, self.rect_titre)
-        pg.display.flip()
 
 
 class Bouton:
     rect_titre: any
 
     def __init__(
-        self,
-        fenetre,
-        couleur_fond,
-        couleur_texte: tuple,
-        texte: str,
-        pos: tuple,
-        action: callable,
-        identifiant: str,
-        **kwargs
+            self,
+            fenetre,
+            image: pg.Surface,
+            pos: tuple,
+            action: callable,
+            identifiant: str,
+            **kwargs
     ):
         """
         Bouton pour le menu
@@ -94,117 +96,25 @@ class Bouton:
             **kwargs:
         """
         self.fenetre = fenetre
-        self.couleur_fond = couleur_fond
-        self.couleur_texte = couleur_texte
         self.pos = pos
 
         self.action = action
         self.identifiant = identifiant
 
-        self.texte = texte
-        style_police = (
-            "freesans"
-            if kwargs.get("style_police") is None
-            else kwargs.get("style_police")
-        )
-        taille_police = (
-            48 if kwargs.get("taille_police") is None else kwargs.get("taille_police")
-        )
-        self.police = pg.font.SysFont(style_police, taille_police)
+        self.image = image
+        self.image_rect = self.image.get_rect()
 
-        self.affiche(self.couleur_fond, self.couleur_texte)
+        self.affiche()
 
-    def affiche(self, couleur_fond, couleur_texte: tuple, marges: tuple = ()):
-        titre = self.police.render(self.texte, True, couleur_texte, None)
-        self.rect_titre = titre.get_rect()
-        self.rect_titre.center = self.pos
+    def affiche(self):
+        self.image_rect.x = self.pos[0] - self.image_rect.w // 2
+        self.image_rect.y = self.pos[1] - self.image_rect.h // 2
 
-        if 4 >= len(marges) > 0 and couleur_fond is not None:
-            # si 2, alors les marges en haut et en bas seront marges[0]
-            # et marges[1] sera pour les marges a droite et gauche
-            if len(marges) == 2:
-                rect_fond_titre = pg.Rect(
-                    self.rect_titre[0] - marges[1],
-                    self.rect_titre[1] - marges[0],
-                    self.rect_titre[2] + marges[1] * 2,
-                    self.rect_titre[3] + marges[0] * 2,
-                )
-
-                pg.draw.rect(self.fenetre, couleur_fond, rect_fond_titre)
-
-            # marges[0] -> marge en haut, 1 -> a droite, 2 -> en bas, 3 -> gauche
-            elif len(marges) == 4:
-                rect_fond_titre = pg.Rect(
-                    self.rect_titre[0] - marges[3],
-                    self.rect_titre[1] - marges[0],
-                    self.rect_titre[2] + marges[1],
-                    self.rect_titre[3] + marges[2],
-                )
-
-                pg.draw.rect(self.fenetre, couleur_fond, rect_fond_titre)
-
-            elif len(marges) == 5:
-                rect_fond_titre = pg.Rect(
-                    self.rect_titre[0] - marges[3],
-                    self.rect_titre[1] - marges[0],
-                    self.rect_titre[2] + marges[1],
-                    self.rect_titre[3] + marges[2],
-                )
-
-                pg.draw.rect(self.fenetre, couleur_fond, rect_fond_titre, marges[4])
-
-        self.fenetre.blit(titre, self.rect_titre)
-
-        pg.display.flip()
+        self.fenetre.blit(self.image, self.image_rect)
+        self.fenetre.blit(self.image, self.image_rect)
 
     def click(self):
-        global BOUTON_PRESS
-
-        couleur_texte_survol = generation_couleur_survol(self.couleur_texte)
-
-        self.affiche(self.couleur_fond, couleur_texte_survol)
-
-        if pg.mouse.get_pressed()[0] and not BOUTON_PRESS:
-            BOUTON_PRESS = True
-            return [1, self.identifiant, self.action()]
-        elif not pg.mouse.get_pressed()[0]:
-            BOUTON_PRESS = False
-            return [0, self.identifiant, None]
-
-
-class BoutonSelect(Bouton):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.options = kwargs.get("options")
-        self.choisie = 0
-
-        self.texte_base = self.texte
-        self.texte = self.texte_base + self.options[self.choisie % len(self.options)][0]
-
-        self.affiche(self.couleur_fond, self.couleur_texte, (10, 20))
-
-    def click(self):
-        global BOUTON_PRESS
-
-        couleur_texte_survol = generation_couleur_survol(self.couleur_texte)
-
-        self.affiche(self.couleur_fond, couleur_texte_survol, (10, 20))
-
-        if pg.mouse.get_pressed()[0] and not BOUTON_PRESS:
-            BOUTON_PRESS = True
-            self.choisie += 1
-            self.texte = (
-                self.texte_base + self.options[self.choisie % len(self.options)][0]
-            )
-            return [
-                1,
-                self.identifiant,
-                self.action(self.options[self.choisie % len(self.options)]),
-            ]
-        elif not pg.mouse.get_pressed()[0]:
-            BOUTON_PRESS = False
-            return [0, self.identifiant, None]
+        return [1, self.identifiant, self.action()]
 
 
 class Image:
@@ -225,8 +135,10 @@ class Image:
         self.rect_image = self.texture.get_rect()
         self.rect_image.center = pos
 
+        self.affiche()
+
+    def affiche(self):
         self.fenetre.blit(self.texture, self.rect_image)
-        pg.display.flip()
 
 
 class Menu:
@@ -247,33 +159,47 @@ class Menu:
         self.fenetre.fill(self.couleur_fond)
         pg.display.flip()
 
+        self.textes = []
+        self.images = []
         self.boutons = []
 
     def ajout_texte(self, *args, **kwargs):
-        Texte(self.fenetre, *args, **kwargs)
+        self.textes.append(Texte(self.fenetre, *args, **kwargs))
 
     def ajout_image(self, *args, **kwargs):
-        Image(self.fenetre, *args, **kwargs)
+        self.images.append(Image(self.fenetre, *args, **kwargs))
 
     def ajout_bouton(self, *args, **kwargs):
-        if kwargs.get("type_bouton") == "select":
-            self.boutons.append(BoutonSelect(self.fenetre, *args, **kwargs))
-        else:
-            self.boutons.append(Bouton(self.fenetre, *args, **kwargs))
+        self.boutons.append(Bouton(self.fenetre, *args, **kwargs))
+
+    def rerendre(self):
+        for bouton in self.boutons:
+            bouton.affiche()
+
+        for texte in self.textes:
+            texte.affiche()
+
+        for image in self.images:
+            image.affiche()
+
+    def supprime(self):
+        self.boutons = []
+        self.textes = []
+        self.images = []
 
     def bouton_press(self):
+        dessus = False
         for bouton in self.boutons:
-            dx = bouton.rect_titre[0]
-            dy = bouton.rect_titre[1]
+            if bouton.image_rect.collidepoint(pg.mouse.get_pos()):
+                pg.mouse.set_cursor(*pg.cursors.diamond)
+                dessus = True
 
-            fx = dx + bouton.rect_titre[2]
-            fy = dy + bouton.rect_titre[3]
+                press = sum(pg.mouse.get_pressed())
 
-            pointeur = pg.mouse.get_pos()
+                if press:
+                    action = bouton.click()
+                    pg.time.wait(300)
 
-            couleur_texte = bouton.couleur_texte
-
-            if dx < pointeur[0] < fx and dy < pointeur[1] < fy:
-                return bouton.click()
-            else:
-                bouton.affiche(bouton.couleur_fond, couleur_texte)
+                    return action
+        if not dessus:
+            pg.mouse.set_cursor(*pg.cursors.arrow)

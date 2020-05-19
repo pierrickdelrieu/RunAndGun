@@ -1,5 +1,6 @@
 import math
 
+from Class import Joueur
 from autre.constants import *
 
 
@@ -29,7 +30,7 @@ class Projectile(pg.sprite.Sprite):
         y: float,
         angle: int,
         degats: int,
-        adversaire: tuple,
+        adversaire: Joueur,
         chemin_images: str,
         monde: list,
     ):
@@ -61,14 +62,7 @@ class Projectile(pg.sprite.Sprite):
         self.vy = self.velocity * math.sin(math.radians(self.angle))
 
     def update(self):
-        adv = pg.Rect(
-            self.adversaire[0] - LARGEUR_JOUEUR // 2,
-            self.adversaire[1] - HAUTEUR_JOUEUR // 2,
-            LARGEUR_JOUEUR,
-            HAUTEUR_JOUEUR,
-        )
-
-        if adv.collidepoint(*self.rect.center):
+        if pg.sprite.collide_rect(self, self.adversaire):
             self.image = pg.transform.scale(
                 pg.image.load(self.chemin_images + "/explosion.png").convert_alpha(),
                 (64, 64),
@@ -140,7 +134,7 @@ class Type1(Projectile):
             y (int): position Y au lancé
             direction (int): direction (1 -> vers la droite, -1 -> vers la gauche)
             angle (int): inclinaison du lancé
-            adversaire (tuple): coordonnées de l'adversaire
+            adversaire (Joueur): joueur a toucher
             monde (list): tableau 2D avec les bloques du mondes
             theme (str): theme du monde
         """
@@ -182,7 +176,7 @@ class Type2(Projectile):
             y (int): position Y au lancé
             direction (int): direction (1 -> vers la droite, -1 -> vers la gauche)
             angle (int): inclinaison du lancé
-            adversaire (tuple): coordonnées de l'adversaire
+            adversaire (Joueur): joueur a toucher
             monde (list): tableau 2D avec les bloques du mondes
             theme (str): theme du monde
         """
@@ -224,7 +218,7 @@ class Type3(Projectile):
             y (int): position Y au lancé
             direction (int): direction (1 -> vers la droite, -1 -> vers la gauche)
             angle (int): inclinaison du lancé
-            adversaire (tuple): coordonnées de l'adversaire
+            adversaire (Joueur): joueur a toucher
             monde (list): tableau 2D avec les bloques du mondes
             theme (str): theme du monde
         """

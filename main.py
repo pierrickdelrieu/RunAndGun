@@ -11,6 +11,7 @@ chargement(fenetre, 0)
 def main(theme: str, id_niveau: int):
     clock = pg.time.Clock()
     tour = 1
+    tour_total = 1
 
     chargement(fenetre, 1)
 
@@ -146,6 +147,7 @@ def main(theme: str, id_niveau: int):
                     f"Dégats: {joueurs.get(tour)[4].degats}",
                     (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 20),
                 )
+                info.rerendre()
                 pg.display.flip()
 
                 pg.time.wait(2000)
@@ -161,7 +163,7 @@ def main(theme: str, id_niveau: int):
                     y=joueurs.get(tour)[0].get_pos()[1],
                     direction=joueurs.get(tour)[0].regarde,
                     angle=joueurs.get(tour)[1].angle,
-                    adversaire=joueurs.get(tour % 2 + 1)[0].get_pos(),
+                    adversaire=joueurs.get(tour % 2 + 1)[0],
                     monde=monde.hit_box(),
                     theme=theme,
                 )
@@ -175,9 +177,16 @@ def main(theme: str, id_niveau: int):
                 joueurs.get(tour % 2 + 1)[0].vie -= projectile.degats
 
             if joueurs.get(tour % 2 + 1)[0].vie <= 0:
-                victoire(fenetre, tour)
+                return {
+                    "vie": {
+                        1: joueurs.get(1)[0].vie,
+                        2: joueurs.get(2)[0].vie,
+                    },
+                    "tour": tour_total
+                }
 
             tour = tour % 2 + 1
+            tour_total += 1
 
         floor = toutes_les_images.draw(fenetre)
         pg.display.update(floor)

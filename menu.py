@@ -1,10 +1,18 @@
 from autre.utils import *
 from Class.Menu import Menu
+from main import main
 
 pg.init()
 fenetre = pg.display.set_mode(RESOLUTION.size)
 
-theme_choisi = "bob"
+themes = {
+    1: 'bob',
+    2: 'mario',
+    3: 'minecraft',
+    4: 'pokemon',
+    5: 'star_wars',
+}
+theme_choisi = 1
 niveau_choisi = 1
 
 
@@ -13,143 +21,202 @@ def quitter():
     quit()
 
 
-def page_choix_theme(_fenetre) -> Menu:
-    global theme_choisi
+def page_game_over(_fenetre, resultat: dict):
+    if resultat.get('vie')[1] <= 0:
+        gagnant = 2
+    else:
+        gagnant = 1
 
-    def themes(theme: tuple):
-        global theme_choisi
+    _menu = Menu(_fenetre, couleur_fond=(155, 155, 255))
+
+    _menu.ajout_texte(
+        None,
+        (0, 0, 0),
+        "Game Over !",
+        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 200),
+        taille_police=84
+    )
+
+    _menu.ajout_texte(
+        None,
+        (0, 0, 0),
+        f"Le joueur {gagnant} a gagné contre le joueur {gagnant % 2 + 1}"
+        f" en {resultat.get('tour')} tours !",
+        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 150),
+        taille_police=42
+    )
+
+    _menu.ajout_texte(
+        None,
+        (0, 0, 0),
+        f"Vie du joueur 1: {resultat.get('vie')[1]}",
+        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 110),
+        taille_police=42
+    )
+    _menu.ajout_texte(
+        None,
+        (0, 0, 0),
+        f"Vie du joueur 2: {resultat.get('vie')[2]}",
+        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 80),
+        taille_police=42
+    )
+
+    _menu.ajout_bouton(
+        pg.image.load("./themes/menu/bouton_quitter.png"),
+        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 25),
+        quitter,
+        identifiant="quit",
+    )
+
+    _menu.rerendre()
+    pg.display.flip()
+
+
+def page_choix_terrain(_fenetre) -> Menu:
+    global niveau_choisi
+    _menu = Menu(_fenetre, couleur_fond=(155, 155, 255))
+
+    def retour():
+        _menu.supprime()
+        return page_choix_theme(_fenetre)
+
+    def jouer():
+        _menu.supprime()
+        return page_game_over(
+            _fenetre,
+            main(themes[theme_choisi], niveau_choisi)
+        )
+
+    def changer_terrain():
+        global niveau_choisi
+        niveau_choisi = 1 if niveau_choisi == 2 else niveau_choisi + 1
+
         fond = pg.Surface(RESOLUTION.size)
         fond.blit(
             pg.image.load(
-                "{}/fond.png".format(ACCES_TERRAINS.format(theme[1]))
+                "{}/{}/rendu.png".format(
+                    ACCES_TERRAINS.format(themes[theme_choisi]),
+                    niveau_choisi
+                )
             ).convert_alpha(),
             (0, 0),
         )
-
         _fenetre.blit(fond, (0, 0))
-        pg.display.flip()
+
+        _menu.supprime()
 
         _menu.ajout_texte(
             None,
-            (190, 190, 70),
-            "Choix du theme :",
+            (0, 0, 0),
+            "Choix du terrain",
             (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 200),
+            taille_police=84
+        )
+        _menu.ajout_texte(
+            None,
+            (0, 0, 0),
+            f"choix: {themes[theme_choisi].capitalize().replace('_', ' ')}",
+            (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 150),
+            taille_police=42
+        )
+        _menu.ajout_texte(
+            None,
+            (0, 0, 0),
+            f"terrain: {niveau_choisi}",
+            (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 125),
+            taille_police=42
+        )
+
+        _menu.ajout_bouton(
+            pg.image.load("./themes/menu/bouton_play.png"),
+            (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 25),
+            jouer,
+            identifiant="jouer",
         )
         _menu.ajout_bouton(
-            (50, 220, 60),
-            (255, 255, 255),
-            "Valider",
-            (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 150),
-            selection_niveau,
-            identifiant="start",
+            pg.image.load("./themes/menu/bouton_changer.png"),
+            (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 25),
+            changer_terrain,
+            identifiant="terrain",
         )
 
-        theme_choisi = theme[1]
+        _menu.ajout_bouton(
+            pg.image.load("./themes/menu/bouton_retour.png"),
+            (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 110),
+            retour,
+            identifiant="retour",
+        )
 
-    def selection_niveau():
-        return page_choix_niveau(_fenetre, theme_choisi)
+        _menu.rerendre()
+        pg.display.flip()
 
-    _menu = Menu(_fenetre, couleur_fond=(105, 105, 105))
-    themes((theme_choisi, theme_choisi))
-
-    _menu.ajout_bouton(
-        (25, 25, 25, 1),
-        (255, 255, 255),
-        "",
-        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2),
-        themes,
-        type_bouton="select",
-        options=[
-            ("Bob l'eponge (cliquer pour changer)", "bob"),
-            ("Mario (cliquer pour changer)", "mario"),
-            ("Pokemon (cliquer pour changer)", "pokemon"),
-            ("Star Wars (cliquer pour changer)", "star_wars"),
-            ("Minecraft (cliquer pour changer)", "minecraft"),
-        ],
-        identifiant="theme",
-    )
+    changer_terrain()
 
     return _menu
 
 
-def page_choix_niveau(_fenetre, theme: str) -> Menu:
+def page_choix_theme(_fenetre) -> Menu:
     global theme_choisi
+    _menu = Menu(_fenetre, couleur_fond=(155, 155, 255))
 
-    def selection_theme():
+    def choisir_terrain():
+        _menu.supprime()
+        return page_choix_terrain(_fenetre)
+
+    def changer_theme():
         global theme_choisi
-        theme_choisi = "bob"
-
-        return page_choix_theme(_fenetre)
-
-    def niveau(id_niveau: tuple):
-        global niveau_choisi
+        theme_choisi = 1 if theme_choisi == len(themes) else theme_choisi + 1
 
         fond = pg.Surface(RESOLUTION.size)
         fond.blit(
             pg.image.load(
-                "{}/{}/rendu.png".format(ACCES_TERRAINS.format(theme), id_niveau[1])
+                "{}/fond.png".format(ACCES_TERRAINS.format(themes[theme_choisi]))
             ).convert_alpha(),
             (0, 0),
         )
-
         _fenetre.blit(fond, (0, 0))
-        pg.display.flip()
+
+        _menu.supprime()
 
         _menu.ajout_texte(
             None,
-            (190, 190, 70),
-            "Choix du niveau :",
+            (0, 0, 0),
+            "Choix du theme",
             (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 200),
+            taille_police=84
+        )
+        _menu.ajout_texte(
+            None,
+            (0, 0, 0),
+            f"choix: {themes[theme_choisi].capitalize().replace('_', ' ')}",
+            (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 150),
+            taille_police=42
+        )
+
+        _menu.ajout_bouton(
+            pg.image.load("./themes/menu/bouton_choisir.png"),
+            (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 25),
+            choisir_terrain,
+            identifiant="suivant",
         )
         _menu.ajout_bouton(
-            (50, 220, 60),
-            (255, 255, 255),
-            "Retour",
-            (RESOLUTION.size[0] // 2 - 70, RESOLUTION.size[1] // 2 + 150),
-            selection_theme,
-            identifiant="start",
-        )
-        _menu.ajout_bouton(
-            (50, 220, 60),
-            (255, 255, 255),
-            "Joueur",
-            (RESOLUTION.size[0] // 2 + 70, RESOLUTION.size[1] // 2 + 150),
-            lancer,
-            identifiant="start",
+            pg.image.load("./themes/menu/bouton_changer.png"),
+            (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 25),
+            changer_theme,
+            identifiant="theme",
         )
 
-        niveau_choisi = id_niveau[1]
+        _menu.rerendre()
+        pg.display.flip()
 
-    def lancer():
-        from main import main
-
-        try:
-            main(theme, niveau_choisi)
-        except KeyboardInterrupt:
-            pg.quit()
-            quit()
-        except Exception as e:
-            crash(fenetre, e)
-
-    _menu = Menu(_fenetre, couleur_fond=(105, 105, 105))
-    niveau(("1", "1"))
-
-    _menu.ajout_bouton(
-        _menu.couleur_fond,
-        (255, 255, 255),
-        "",
-        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2),
-        niveau,
-        type_bouton="select",
-        options=[("1 (cliquer pour changer)", "1"), ("2 (cliquer pour changer)", "2")],
-        identifiant="niveau",
-    )
+    changer_theme()
 
     return _menu
 
 
 def page_accueil(_fenetre) -> Menu:
     def start():
+        _menu.supprime()
         return page_choix_theme(_fenetre)
 
     fond = pg.Surface(RESOLUTION.size)
@@ -160,27 +227,26 @@ def page_accueil(_fenetre) -> Menu:
 
     _menu.ajout_texte(
         _menu.couleur_fond,
-        (190, 190, 70),
+        (0, 0, 0),
         "Projet Transverse !",
         (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 200),
+        taille_police=84
     )
 
     _menu.ajout_bouton(
-        _menu.couleur_fond,
-        (255, 255, 255),
-        "START",
-        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 17),
+        pg.image.load("./themes/menu/bouton_play.png"),
+        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 25),
         start,
-        identifiant="start",
+        identifiant="suivant",
     )
     _menu.ajout_bouton(
-        _menu.couleur_fond,
-        (0, 0, 0),
-        "QUIT",
-        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 17),
+        pg.image.load("./themes/menu/bouton_quitter.png"),
+        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 25),
         quitter,
         identifiant="quit",
     )
+
+    _menu.rerendre()
 
     return _menu
 
@@ -188,6 +254,7 @@ def page_accueil(_fenetre) -> Menu:
 if __name__ == "__main__":
     clock = pg.time.Clock()
     menu = page_accueil(fenetre)
+    pg.display.flip()
 
     while True:
         for event in pg.event.get():
@@ -199,8 +266,8 @@ if __name__ == "__main__":
 
         action = menu.bouton_press()
 
-        if action is not None and action[0] != 0:
-            if isinstance(action[2], Menu):
+        if action is not None and action[0]:
+            if action[1] == 'suivant':
                 menu = action[2]
 
         clock.tick(20)

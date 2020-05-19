@@ -27,53 +27,6 @@ def chargement(fenetre, etape):
     pg.display.flip()
 
 
-def victoire(fenetre, joueur):
-    def quitter():
-        pg.quit()
-        quit()
-
-    def restart():
-        pg.quit()
-        with open("menu.py", "r") as menu:
-            exec(menu.read())
-
-    fond = pg.Surface(RESOLUTION.size)
-    fenetre.blit(fond, (0, 0))
-    pg.display.flip()
-
-    credits = Menu(fenetre, couleur_fond=(155, 155, 255))
-
-    credits.ajout_texte(
-        credits.couleur_fond,
-        (190, 190, 70),
-        "Projet Transverse !",
-        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 200),
-    )
-    credits.ajout_texte(
-        credits.couleur_fond,
-        (70, 190, 70),
-        f"Le joueur {joueur} à gagné !",
-        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 100),
-    )
-
-    credits.ajout_bouton(
-        credits.couleur_fond,
-        (255, 255, 255),
-        "Rejouer",
-        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 17),
-        restart,
-        identifiant="start",
-    )
-    credits.ajout_bouton(
-        credits.couleur_fond,
-        (0, 0, 0),
-        "QUIT",
-        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 17),
-        quitter,
-        identifiant="quit",
-    )
-
-
 def chargement_textures(fenetre, theme: str):
     """
     Fonction qui sert a charger les textures des 2 joueurs et les retourner
