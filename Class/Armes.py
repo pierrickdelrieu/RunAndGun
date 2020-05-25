@@ -12,10 +12,10 @@ class Projectile(pg.sprite.Sprite):
     gravity = 9.81
     angle: int
     velocity: float
-    hit = (
-        0,
-        0,
-    )  # indice 0 : le projectile a t'il touché quelque chose ? indice 1 : est-ce un joueur que ca a touche ?
+
+    # indice 0 : le projectile a t'il touché quelque chose ?
+    # indice 1 : est-ce un joueur que ca a touche ?
+    hit = (0, 0,)
 
     degats: int
 

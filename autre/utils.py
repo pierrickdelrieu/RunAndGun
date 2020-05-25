@@ -3,10 +3,20 @@ import traceback
 from autre.constants import *
 from Class.Joueur import Joueur, Bras
 from Class.Monde import Monde
-from Class.Menu import Menu
 
 
 def chargement(fenetre, etape):
+    """
+    Barre de chargement, affiche simplement 2 rectangles, un blanc et un bleu
+    dont la longueur varie suivant l'etape du chargement
+
+    Args:
+        fenetre : -
+        etape (int): étape du chargement
+
+    Returns:
+        (None)
+    """
     font = pg.font.Font(None, 100)
     nom_jeu = font.render("Projet Transverse", 1, (255, 255, 255))
 
@@ -134,8 +144,8 @@ def chargement_niveau(fenetre, theme: str, id_niveau: int):
     Returns:
         (tuple): tuple contenant:
 
-            monde (list): -
-            fond (list): -
+            monde (Monde): -
+            fond (pg.Surface): -
     """
     monde = Monde(theme)
     monde.chargement_map(id_niveau)
@@ -219,7 +229,9 @@ def application_texture(
 
 def crash(fenetre, e):
     """
-    Fonction pour afficher une erreur (s'il y en a une) et quitter le programme
+    Fonction pour afficher une erreur (s'il y en a une (ce qui ne devrait pas
+    arriver)) et quitter le programme
+
     Args:
         fenetre: -
         e: erreur
