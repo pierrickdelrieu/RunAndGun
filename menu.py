@@ -267,7 +267,7 @@ if __name__ == "__main__":
         action = menu.bouton_press()
 
         if action is not None and action[0]:
-            if action[1] == 'suivant':
+            if action[1] in ['suivant', 'retour']:
                 menu = action[2]
 
         clock.tick(20)
