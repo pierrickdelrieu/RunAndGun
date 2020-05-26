@@ -10,11 +10,11 @@ def chargement(fenetre, etape):
     Barre de chargement, affiche simplement 2 rectangles, un blanc et un bleu
     dont la longueur varie suivant l'etape du chargement
 
-    Args:
+    Args :
         fenetre : -
-        etape (int): étape du chargement
+        etape (int) : étape du chargement
 
-    Returns:
+    Returns :
         (None)
     """
     font = pg.font.Font(None, 100)
@@ -25,7 +25,7 @@ def chargement(fenetre, etape):
     pg.draw.rect(
         fenetre,
         pg.Color("white"),
-        (300, 375, 825, 35),  # (abscisse,ordonné,longuer,hauteur)
+        (300, 375, 825, 35),  # (abscisse,ordonné,longueur,hauteur)
     )
     pg.draw.rect(
         fenetre,
@@ -39,18 +39,20 @@ def chargement(fenetre, etape):
 
 def chargement_textures(fenetre, theme: str):
     """
-    Fonction qui sert a charger les textures des 2 joueurs et les retourner
+    Fonction qui sert à charger les textures des 2 joueurs et les retourner
     dans 2 tableaux
 
-    Args:
+    Args :
         fenetre : -
-        theme (str): Theme à appliquer aux joueurs
+        theme (str) : Theme à appliquer aux joueurs
 
-    Returns:
-        (tuple): tuple contenant:
+    Returns :
+        (tuple) : tuple contenant :
 
-            texture_joueurs (list): Tableau avec les textures du joueur 1 et 2 ainsi que où ils regardent
-            texture_bras (list): Tableau avec les textures du bras des joueurs 1 et 2 ainsi que où ils pointent
+            texture_joueurs (list) : Tableau avec les textures du joueur
+             1 et 2 ainsi que où ils regardent
+            texture_bras (list) : Tableau avec les textures du bras des joueurs
+             1 et 2 ainsi que où ils pointent
     """
 
     texture_joueurs = [
@@ -99,7 +101,7 @@ def chargement_textures(fenetre, theme: str):
     chargement(fenetre, 2)
 
     texture_bras = [
-        {  # meme idée que plus haut mais cette foi on enregistre les
+        {  # meme idée que plus haut mais cette fois on enregistre les
             # bras dans un dict
             -1: {},
             1: {},
@@ -171,21 +173,21 @@ def application_texture(
 ):
     """
 
-    Args:
-        fenetre: -
-        monde: -
-        texture_joueurs: images du corps pour les joueurs
-        texture_bras: images du bras pour les joueurs
-        toutes_les_images: toutes les images chargées sur la fenetre
+    Args :
+        fenetre : -
+        monde : -
+        texture_joueurs : images du corps pour les joueurs
+        texture_bras : images du bras pour les joueurs
+        toutes_les_images : toutes les images chargées sur la fenetre
 
-    Returns:
-        (tuple): tuple contenant:
+    Returns :
+        (tuple) : tuple contenant :
 
-            joueur1 (Joueur): instance du joueur 1
-            bras1 (Bras): instance du bras du joueur 1
+            joueur1 (Joueur) : instance du joueur 1
+            bras1 (Bras) : instance du bras du joueur 1
 
-            joueur2 (Joueur): instance du joueur 2
-            bras2 (Bras): instance du bras du joueur 2
+            joueur2 (Joueur) : instance du joueur 2
+            bras2 (Bras) : instance du bras du joueur 2
     """
     Joueur.containers = toutes_les_images
     Bras.containers = toutes_les_images
@@ -195,14 +197,12 @@ def application_texture(
         monde.params.get(1),
         texture_joueurs[0],
         regarde=1,  # vers ou doit le perso (1 : droite, -1 : gauche)
-        peau=1,  # peau du perso, 1 : joueur 1, 2 : joueur 2
     )
     joueur2 = Joueur(
         fenetre.get_rect(),
         monde.params.get(2),
         texture_joueurs[1],
         regarde=-1,  # vers ou doit le perso (1 : droite, -1 : gauche)
-        peau=2,  # peau du perso, 1 : joueur 1, 2 : joueur 2
     )
 
     chargement(fenetre, 5)
@@ -212,14 +212,12 @@ def application_texture(
         monde.params.get(1),
         texture_bras[0],
         regarde=1,  # vers ou doit pointer le bras (1 : droite, -1 : gauche)
-        peau=1,  # bras du perso, 1 : joueur 1, 2 : joueur 2
     )
     bras2 = Bras(
         fenetre.get_rect(),
         monde.params.get(2),
         texture_bras[1],
         regarde=-1,  # vers ou doit pointer le bras (1 : droite, -1 : gauche)
-        peau=2,  # bras du perso, 1 : joueur 1, 2 : joueur 2
     )
 
     chargement(fenetre, 6)
@@ -232,9 +230,9 @@ def crash(fenetre, e):
     Fonction pour afficher une erreur (s'il y en a une (ce qui ne devrait pas
     arriver)) et quitter le programme
 
-    Args:
-        fenetre: -
-        e: erreur
+    Args :
+        fenetre : -
+        e : erreur
     """
     texte = pg.font.Font(None, 20)
 

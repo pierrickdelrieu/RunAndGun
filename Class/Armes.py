@@ -50,7 +50,8 @@ class Projectile(pg.sprite.Sprite):
         self.chemin_images = chemin_images
 
         self.image = pg.transform.scale(
-            pg.image.load(self.chemin_images + "/projectile.png").convert_alpha(),
+            pg.image.load(self.chemin_images + "/projectile.png")
+                .convert_alpha(),
             (32, 32),
         )
 
@@ -64,7 +65,8 @@ class Projectile(pg.sprite.Sprite):
     def update(self):
         if pg.sprite.collide_rect(self, self.adversaire):
             self.image = pg.transform.scale(
-                pg.image.load(self.chemin_images + "/explosion.png").convert_alpha(),
+                pg.image.load(self.chemin_images + "/explosion.png")
+                    .convert_alpha(),
                 (64, 64),
             )
             self.vx, self.vy = 0, 0
@@ -128,15 +130,16 @@ class Type1(Projectile):
     ):
         """
         Projectile de type 1
-        Args:
-            screen_rect (pg.Rect): -
-            x (int): position X au lancé
-            y (int): position Y au lancé
-            direction (int): direction (1 -> vers la droite, -1 -> vers la gauche)
-            angle (int): inclinaison du lancé
-            adversaire (Joueur): joueur a toucher
-            monde (list): tableau 2D avec les bloques du mondes
-            theme (str): theme du monde
+        Args :
+            screen_rect (pg.Rect) : -
+            x (int) : position X au lancé
+            y (int) : position Y au lancé
+            direction (int) : direction (1 -> vers la droite, -1 -> vers la
+             gauche)
+            angle (int) : inclinaison du lancé
+            adversaire (Joueur) : joueur à toucher
+            monde (list) : tableau 2D avec les bloques du mondes
+            theme (str) : theme du monde
         """
         super().__init__(
             screen_rect,
@@ -170,15 +173,16 @@ class Type2(Projectile):
     ):
         """
         Projectile de type 1
-        Args:
-            screen_rect (pg.Rect): -
-            x (int): position X au lancé
-            y (int): position Y au lancé
-            direction (int): direction (1 -> vers la droite, -1 -> vers la gauche)
-            angle (int): inclinaison du lancé
-            adversaire (Joueur): joueur a toucher
-            monde (list): tableau 2D avec les bloques du mondes
-            theme (str): theme du monde
+        Args :
+            screen_rect (pg.Rect) : -
+            x (int) : position X au lancé
+            y (int) : position Y au lancé
+            direction (int) : direction (1 -> vers la droite, -1 -> vers la
+             gauche)
+            angle (int) : inclinaison du lancé
+            adversaire (Joueur) : joueur à toucher
+            monde (list) : tableau 2D avec les bloques du mondes
+            theme (str) : theme du monde
         """
         super().__init__(
             screen_rect,
@@ -212,15 +216,16 @@ class Type3(Projectile):
     ):
         """
         Projectile de type 1
-        Args:
-            screen_rect (pg.Rect): -
-            x (int): position X au lancé
-            y (int): position Y au lancé
-            direction (int): direction (1 -> vers la droite, -1 -> vers la gauche)
-            angle (int): inclinaison du lancé
-            adversaire (Joueur): joueur a toucher
-            monde (list): tableau 2D avec les bloques du mondes
-            theme (str): theme du monde
+        Args :
+            screen_rect (pg.Rect) : -
+            x (int) : position X au lancé
+            y (int) : position Y au lancé
+            direction (int) : direction (1 -> vers la droite, -1 -> vers la
+             gauche)
+            angle (int) : inclinaison du lancé
+            adversaire (Joueur) : joueur à toucher
+            monde (list) : tableau 2D avec les bloques du mondes
+            theme (str) : theme du monde
         """
         super().__init__(
             screen_rect,

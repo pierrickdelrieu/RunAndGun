@@ -4,23 +4,6 @@ from autre.constants import *
 BOUTON_PRESS = False
 
 
-def generation_couleur_survol(couleur: tuple) -> tuple:
-    """
-    Retourne une dégradé de la couleur pour quand on la survole
-    Args:
-        couleur (tuple): couleur de base
-
-    Returns:
-        (tuple): La couleur de base avec un dégradé
-
-    """
-    return (
-        couleur[0] + (-50 if couleur[0] > 128 else 50),
-        couleur[1] + (-50 if couleur[1] > 128 else 50),
-        couleur[2] + (-50 if couleur[2] > 128 else 50),
-    )
-
-
 class Texte:
     def __init__(
             self,
@@ -34,13 +17,13 @@ class Texte:
         """
         Bouton pour le menu
 
-        Args:
-            fenetre: -
-            couleur_fond (tuple): couleur derriere le texte du bouton
-            couleur_texte (tuple): couleur du texte dans le bouton
-            texte (str): Texte dans le bouton
-            pos (tuple): Position du bouton
-            **kwargs:
+        Args :
+            fenetre : -
+            couleur_fond (tuple) : couleur derriere le texte du bouton
+            couleur_texte (tuple) : couleur du texte dans le bouton
+            texte (str) : Texte dans le bouton
+            pos (tuple) : Position du bouton
+            **kwargs :
         """
         self.fenetre = fenetre
         self.couleur_fond = couleur_fond
@@ -81,19 +64,14 @@ class Bouton:
             pos: tuple,
             action: callable,
             identifiant: str,
-            **kwargs
     ):
         """
         Bouton pour le menu
 
-        Args:
-            fenetre: -
-            couleur_fond (tuple): couleur derriere le texte du bouton
-            couleur_texte (tuple): couleur du texte dans le bouton
-            texte (str): Texte dans le bouton
-            pos (tuple): Position du bouton
-            action (callable): Fonction a executer quand on clique sur le bouton
-            **kwargs:
+        Args :
+            fenetre : -
+            pos (tuple) : Position du bouton
+            action (callable) : Fonction à exécuter quand on clique sur le bouton
         """
         self.fenetre = fenetre
         self.pos = pos
@@ -118,15 +96,14 @@ class Bouton:
 
 
 class Image:
-    def __init__(self, fenetre, texture: pg.Surface, pos: tuple, **kwargs):
+    def __init__(self, fenetre, texture: pg.Surface, pos: tuple):
         """
         Image pour le menu
 
-        Args:
-            fenetre: -
-            texture (pg.Surface): Image a afficher
-            pos (tuple): Position de l'image
-            **kwargs:
+        Args :
+            fenetre : -
+            texture (pg.Surface) : Image à afficher
+            pos (tuple) : Position de l'image
         """
 
         self.fenetre = fenetre
@@ -146,9 +123,9 @@ class Menu:
         """
         Fenetre du menu
 
-        Args:
-            fenetre: -
-            **kwargs:
+        Args :
+            fenetre : -
+            **kwargs :
         """
         self.fenetre = fenetre
         if kwargs.get("couleur_fond") is None:

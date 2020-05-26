@@ -10,7 +10,7 @@ class Joueur(pg.sprite.Sprite):
     is_shooting: bool = False
 
     def __init__(
-        self, screen_rect: pg.Rect, pos: tuple, textures, regarde: int, peau: int
+        self, screen_rect: pg.Rect, pos: tuple, textures, regarde: int
     ):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
@@ -20,7 +20,10 @@ class Joueur(pg.sprite.Sprite):
         self.image = textures.get(self.regarde)
 
         self.rect = self.image.get_rect(
-            midbottom=((pos[0] + 1) * LARGEUR_TUILE, (pos[1] + 1) * HAUTEUR_TUILE)
+            midbottom=(
+                (pos[0] + 1) * LARGEUR_TUILE,
+                (pos[1] + 1) * HAUTEUR_TUILE
+            )
         )
         self.energie = 100
         self.vie = 100
@@ -70,7 +73,7 @@ class Bras(pg.sprite.Sprite):
     bonds = 10
 
     def __init__(
-        self, screen_rect: pg.Rect, pos: tuple, textures, regarde: int, peau: int
+        self, screen_rect: pg.Rect, pos: tuple, textures, regarde: int
     ):
         pg.sprite.Sprite.__init__(self, self.containers)
         self.screen_rect = screen_rect
@@ -81,7 +84,10 @@ class Bras(pg.sprite.Sprite):
 
         self.image = self.images.get(regarde).get(self.angle)
         self.rect = self.image.get_rect(
-            midbottom=((pos[0] + 1) * LARGEUR_TUILE, (pos[1] + 1) * HAUTEUR_TUILE)
+            midbottom=(
+                (pos[0] + 1) * LARGEUR_TUILE,
+                (pos[1] + 1) * HAUTEUR_TUILE
+            )
         )
 
     def move(self, direction, monde):

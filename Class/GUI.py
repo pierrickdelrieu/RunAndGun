@@ -16,6 +16,7 @@ class VieGUI(pg.sprite.Sprite):
 
         self.update()
 
+        # -10 / -26 : tatonnement pour aligner correctement...
         self.rect = self.image.get_rect().move(
             self.joueur.get_pos()[0] - LARGEUR_JOUEUR // 2 - 10,
             self.joueur.get_pos()[1] - HAUTEUR_JOUEUR // 2 - 26,
@@ -31,6 +32,7 @@ class VieGUI(pg.sprite.Sprite):
         self.image.blit(texte, (0, 0))
 
     def move(self):
+        # -10 / -26 : tatonnement pour aligner correctement...
         self.rect = self.image.get_rect().move(
             self.joueur.get_pos()[0] - LARGEUR_JOUEUR // 2 - 10,
             self.joueur.get_pos()[1] - HAUTEUR_JOUEUR // 2 - 26,
@@ -104,6 +106,7 @@ class EnergieGUI(pg.sprite.Sprite):
 
         self.update()
 
+        # -25 / +15 : tatonnement pour aligner correctement...
         self.rect = self.image.get_rect().move(
             self.joueur.get_pos()[0] - LARGEUR_JOUEUR // 2 - 25,
             self.joueur.get_pos()[1] - HAUTEUR_JOUEUR // 2 + 15,
@@ -120,7 +123,8 @@ class EnergieGUI(pg.sprite.Sprite):
             couleur = self.couleur
 
         texte = self.texte.render(
-            f"Déplacement: {self.joueur.energie}%", True, couleur, self.fond_couleur
+            f"Déplacement: {self.joueur.energie}%",
+            True, couleur, self.fond_couleur
         )
 
         self.image = pg.Surface((texte.get_width(), texte.get_height()))
@@ -133,6 +137,7 @@ class EnergieGUI(pg.sprite.Sprite):
         else:
             self.fond_couleur = (0, 0, 0)
 
+        # -10 : tatonnement pour aligner correctement...
         self.rect = self.image.get_rect().move(
             self.joueur.get_pos()[0] - LARGEUR_JOUEUR // 2 - 10,
             self.joueur.get_pos()[1] - HAUTEUR_JOUEUR // 2 - 10,
@@ -149,6 +154,7 @@ class AideGUI(pg.sprite.Sprite):
         self.couleur = pg.Color("Black")
 
         self.update()
+        # -20 : tatonnement pour aligner correctement...
         self.rect = self.image.get_rect().move(10, RESOLUTION.size[1] - 20)
 
     def update(self):
