@@ -1,5 +1,6 @@
 from Class.Armes import Type1, Type2, Type3
 from Class.GUI import VieGUI, EnergieGUI, ArmeGUI, TourGUI, AideGUI
+from Class.Menu import Menu
 from autre.utils import *
 
 pg.init()

@@ -62,7 +62,7 @@ def page_game_over(_fenetre, resultat: dict):
     )
 
     _menu.ajout_bouton(
-        pg.image.load("./themes/menu/bouton_quitter.png"),
+        pg.image.load("./autre/menu/bouton_quitter.png"),
         (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 25),
         quitter,
         identifiant="quit",
@@ -128,20 +128,20 @@ def page_choix_terrain(_fenetre) -> Menu:
         )
 
         _menu.ajout_bouton(
-            pg.image.load("./themes/menu/bouton_play.png"),
+            pg.image.load("./autre/menu/bouton_play.png"),
             (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 25),
             jouer,
             identifiant="jouer",
         )
         _menu.ajout_bouton(
-            pg.image.load("./themes/menu/bouton_changer.png"),
+            pg.image.load("./autre/menu/bouton_changer.png"),
             (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 25),
             changer_terrain,
             identifiant="terrain",
         )
 
         _menu.ajout_bouton(
-            pg.image.load("./themes/menu/bouton_retour.png"),
+            pg.image.load("./autre/menu/bouton_retour.png"),
             (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 110),
             retour,
             identifiant="retour",
@@ -194,13 +194,13 @@ def page_choix_theme(_fenetre) -> Menu:
         )
 
         _menu.ajout_bouton(
-            pg.image.load("./themes/menu/bouton_choisir.png"),
+            pg.image.load("./autre/menu/bouton_choisir.png"),
             (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 25),
             choisir_terrain,
             identifiant="suivant",
         )
         _menu.ajout_bouton(
-            pg.image.load("./themes/menu/bouton_changer.png"),
+            pg.image.load("./autre/menu/bouton_changer.png"),
             (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 25),
             changer_theme,
             identifiant="theme",
@@ -234,13 +234,13 @@ def page_accueil(_fenetre) -> Menu:
     )
 
     _menu.ajout_bouton(
-        pg.image.load("./themes/menu/bouton_play.png"),
+        pg.image.load("./autre/menu/bouton_play.png"),
         (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 25),
         start,
         identifiant="suivant",
     )
     _menu.ajout_bouton(
-        pg.image.load("./themes/menu/bouton_quitter.png"),
+        pg.image.load("./autre/menu/bouton_quitter.png"),
         (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 25),
         quitter,
         identifiant="quit",
