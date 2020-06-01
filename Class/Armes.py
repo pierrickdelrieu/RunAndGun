@@ -163,7 +163,7 @@ class Type2(Projectile):
     containers: any
 
     degats = 20
-    velocity = 100
+    velocity = 120
 
     def __init__(
         self,
