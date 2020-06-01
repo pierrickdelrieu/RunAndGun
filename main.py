@@ -79,7 +79,7 @@ def main(theme: str, id_niveau: int) -> dict:
 
     while joueurs.get(tour)[0].vie > 0:
         pg.display.set_caption(
-            f"Projet Transverse! - fps:{round(clock.get_fps())}")
+            f"Run and Gun! - fps:{round(clock.get_fps())}")
         for event in pg.event.get():
             if event.type == pg.QUIT or (
                     event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE
