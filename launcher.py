@@ -61,15 +61,18 @@ def page_game_over(_fenetre, resultat: dict):
         taille_police=42
     )
 
-    _menu.ajout_bouton(
-        pg.image.load("./autre/menu/bouton_quitter.png"),
-        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 25),
-        quitter,
-        identifiant="quit",
+    _menu.ajout_texte(
+        None,
+        (0, 0, 0),
+        f"Appuyez sur `echap` pour quitter",
+        (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 + 180),
+        taille_police=24
     )
 
     _menu.rerendre()
     pg.display.flip()
+
+    return _menu
 
 
 def page_choix_terrain(_fenetre) -> Menu:

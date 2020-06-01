@@ -70,7 +70,13 @@ def main(theme: str, id_niveau: int):
             if event.type == pg.QUIT or (
                 event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE
             ):
-                return
+                return {
+                    "vie": {
+                        1: joueurs.get(1)[0].vie,
+                        2: joueurs.get(2)[0].vie,
+                    },
+                    "tour": tour_total
+                }
 
         tour_gui.tour = tour
         arme_gui.arme = armes.index(joueurs.get(tour)[4]) + 1
@@ -168,6 +174,9 @@ def main(theme: str, id_niveau: int):
                     monde=monde.hit_box(),
                     theme=theme,
                 )
+
+                # on remet le fond de la jauge d'endurance du perso en noir
+                # parce que ce n'est plus à lui de jouer
                 joueurs.get(tour)[2].fond_couleur = (0, 0, 0)
 
         elif projectile.hit[0]:
