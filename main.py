@@ -9,7 +9,17 @@ fenetre = pg.display.set_mode(RESOLUTION.size)
 chargement(fenetre, 0)
 
 
-def main(theme: str, id_niveau: int):
+def main(theme: str, id_niveau: int) -> dict:
+    """
+    Fonction mère de tout le projet
+
+    Args :
+        theme (str) : thème choisi par l'utilisateur
+        id_niveau (int) : id du terrain (1 ou 2)
+
+    Returns :
+        (dict) : stats de jeu (gagnant, nom de tour, vie)
+    """
     clock = pg.time.Clock()
     tour = 1
     tour_total = 1
@@ -19,9 +29,10 @@ def main(theme: str, id_niveau: int):
     monde, fond = chargement_niveau(fenetre, theme, id_niveau)
     texture_joueurs, texture_bras = chargement_textures(fenetre, theme)
     toutes_les_images = pg.sprite.RenderUpdates()
-    joueur1_corps, joueur1_bras, joueur2_corps, joueur2_bras = application_texture(
-        fenetre, monde, texture_joueurs, texture_bras, toutes_les_images
-    )
+    joueur1_corps, joueur1_bras, joueur2_corps, joueur2_bras = \
+        application_texture(
+            fenetre, monde, texture_joueurs, texture_bras, toutes_les_images
+        )
 
     # Si on arrive ici, c'est que tout a été chargé donc on vire la barre de
     # chargement en forcant l'affichage sur la fenetre du fond qui vient
@@ -41,8 +52,10 @@ def main(theme: str, id_niveau: int):
     joueur2_vie = VieGUI(fenetre.get_rect(), joueur2_corps)
 
     joueurs = {
-        1: [joueur1_corps, joueur1_bras, joueur1_energie, joueur1_vie, armes[0]],
-        2: [joueur2_corps, joueur2_bras, joueur2_energie, joueur2_vie, armes[0]],
+        1: [joueur1_corps, joueur1_bras, joueur1_energie, joueur1_vie,
+            armes[0]],
+        2: [joueur2_corps, joueur2_bras, joueur2_energie, joueur2_vie,
+            armes[0]],
     }
 
     arme_gui = ArmeGUI(theme)
@@ -65,10 +78,11 @@ def main(theme: str, id_niveau: int):
         toutes_les_images.add(AideGUI())
 
     while joueurs.get(tour)[0].vie > 0:
-        pg.display.set_caption(f"Projet Transverse! - fps:{round(clock.get_fps())}")
+        pg.display.set_caption(
+            f"Projet Transverse! - fps:{round(clock.get_fps())}")
         for event in pg.event.get():
             if event.type == pg.QUIT or (
-                event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE
+                    event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE
             ):
                 return {
                     "vie": {
@@ -105,8 +119,8 @@ def main(theme: str, id_niveau: int):
                 touche_presse[pg.K_UP] - touche_presse[pg.K_DOWN]
             )
 
-            # changement d'arme (si la touche "a" est pressé, on prend l'arme precedent, si c'est "z", on prend la
-            # suivante
+            # changement d'arme (si la touche "a" est pressé, on prend l'arme
+            # precedent, si c'est "z", on prend la suivante
             if touche_presse[pg.K_a]:
                 selection = armes.index(joueurs.get(tour)[4])
 
@@ -140,7 +154,8 @@ def main(theme: str, id_niveau: int):
                 )
                 info.ajout_image(
                     arme_gui.image,
-                    (RESOLUTION.size[0] // 2 + 40, RESOLUTION.size[1] // 2 - 80),
+                    (RESOLUTION.size[0] // 2 + 40,
+                     RESOLUTION.size[1] // 2 - 80),
                 )
                 info.ajout_texte(
                     None,

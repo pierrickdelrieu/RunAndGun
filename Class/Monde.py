@@ -26,8 +26,9 @@ class Monde:
     def chargement_map(self, id_niveau: int) -> None:
         """
         Charge le niveau correspondant a l'id, dans self.niveau
-        Args:
-            id_niveau (int): ID du niveau a charger
+
+        Args :
+            id_niveau (int) : ID du niveau à charger
         """
         self.id_niveau = id_niveau
 
@@ -46,8 +47,8 @@ class Monde:
 
     def enregistrement_map(self) -> None:
         """
-        Enregistre le niveau dans un .png pour, par la suite, n'avoir
-        qu'a afficher une image en fond d'ecran
+        Enregistre le niveau dans un .png pour, par la suite, n'avoir qu'à
+        afficher une image en fond d'ecran
         """
         fond = pg.Surface(self.taille_screen())
         fond.blit(
@@ -76,10 +77,24 @@ class Monde:
         )
 
     def taille_screen(self) -> tuple:
+        """
+        Retourne les dimensions de la fenêtre de jeu (pouvant varier suivant
+        le nombre de tuiles sur le terrain)
+
+        Returns :
+            (tuple) : dimensions de l'ecran (largeur, hauteur)
+        """
         size = (self.largeur_screen, self.hauteur_screen)
         return size
 
     def hit_box(self) -> list:
+        """
+        Retourne une liste contenant toutes les boites de collisions sur le
+        terrain (suivant si une tuile est soumise aux collisions ou non)
+
+        Returns :
+            (list) : liste de toutes les boites de collision sur le terrain
+        """
         hit_box = []
 
         x_max = self.largeur_screen // LARGEUR_TUILE

@@ -15,7 +15,7 @@ class Texte:
             **kwargs
     ):
         """
-        Bouton pour le menu
+        Texte pour le menu
 
         Args :
             fenetre : -
@@ -48,6 +48,9 @@ class Texte:
         self.rect_titre = self.titre.get_rect()
 
     def affiche(self):
+        """
+        Affiche le texte sur l'écran
+        """
         self.rect_titre.x = self.pos[0] - self.rect_titre.w // 2
         self.rect_titre.y = self.pos[1] - self.rect_titre.h // 2
 
@@ -85,13 +88,24 @@ class Bouton:
         self.affiche()
 
     def affiche(self):
+        """
+        Affiche le bouton sur l'écran
+        """
         self.image_rect.x = self.pos[0] - self.image_rect.w // 2
         self.image_rect.y = self.pos[1] - self.image_rect.h // 2
 
         self.fenetre.blit(self.image, self.image_rect)
         self.fenetre.blit(self.image, self.image_rect)
 
-    def click(self):
+    def click(self) -> list:
+        """
+        Retourne un tableau contenant différentes infos sur le bouton
+
+        Returns :
+            (list) : indice 0 : 1 si cliqué, 0 sinon
+                     indice 1 : l'identifiant du bouton
+                     indice 2 : le retour de l'action effectuée par le bouton
+        """
         return [1, self.identifiant, self.action()]
 
 
@@ -115,6 +129,9 @@ class Image:
         self.affiche()
 
     def affiche(self):
+        """
+        Affiche l'image sur l'écran
+        """
         self.fenetre.blit(self.texture, self.rect_image)
 
 
@@ -141,15 +158,27 @@ class Menu:
         self.boutons = []
 
     def ajout_texte(self, *args, **kwargs):
+        """
+        Ajoute un texte dans la structure du menu
+        """
         self.textes.append(Texte(self.fenetre, *args, **kwargs))
 
     def ajout_image(self, *args, **kwargs):
+        """
+        Ajoute une image dans la structure du menu
+        """
         self.images.append(Image(self.fenetre, *args, **kwargs))
 
     def ajout_bouton(self, *args, **kwargs):
+        """
+        Ajoute un bouton dans la structure du menu
+        """
         self.boutons.append(Bouton(self.fenetre, *args, **kwargs))
 
     def rerendre(self):
+        """
+        Permet de rafraichir tous les éléments du menu
+        """
         for bouton in self.boutons:
             bouton.affiche()
 
@@ -160,11 +189,17 @@ class Menu:
             image.affiche()
 
     def supprime(self):
+        """
+        Vide tous les éléments du menu
+        """
         self.boutons = []
         self.textes = []
         self.images = []
 
     def bouton_press(self):
+        """
+        Test si un des boutons du menu est pressé
+        """
         dessus = False
         for bouton in self.boutons:
             if bouton.image_rect.collidepoint(pg.mouse.get_pos()):

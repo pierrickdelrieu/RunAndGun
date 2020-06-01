@@ -29,7 +29,15 @@ class Joueur(pg.sprite.Sprite):
         self.vie = 100
         self.en_vie = True
 
-    def move(self, direction, monde):
+    def move(self, direction: int, monde: list):
+        """
+        Fonction appelée lorsque qu'il y a un mouvement à effectuer au perso
+
+        Args :
+            direction (int) : si 1, vers la droite | si -1, vers la gauche
+            monde (list) : liste contenant toutes les boites de
+             collision du monde (cf Class/Monde.py#L90)
+        """
         if direction:
             self.regarde = direction
         self.rect.move_ip(direction * self.vitesse, 0)
@@ -41,6 +49,9 @@ class Joueur(pg.sprite.Sprite):
             self.energie -= 1
             self.rect.top += 1 if self.rect.left % 2 else -1
 
+        # est-ce que parmi toutes les boites de collision, le perso est sur
+        # l'une d'elle ? si c'est le cas, alors dans la liste il y aura un 1,
+        # max de 0, ..., 1, ... donne 1 donc True
         sol = max(
             pg.Rect(tile[0], tile[1] - 10, LARGEUR_TUILE, HAUTEUR_TUILE).collidepoint(
                 self.rect.center[0], self.rect.center[1] + HAUTEUR_JOUEUR // 2
@@ -48,6 +59,8 @@ class Joueur(pg.sprite.Sprite):
             for tile in monde
         )
 
+        # meme idée qu'avec `sol` mais en vérifiant cette fois si au-dessus
+        # devant le perso et non en dessous
         obstacle = max(
             pg.Rect(tile[0], tile[1], LARGEUR_TUILE, HAUTEUR_TUILE).collidepoint(
                 self.rect.center[0], self.rect.center[1] + HAUTEUR_JOUEUR // 3
@@ -55,16 +68,28 @@ class Joueur(pg.sprite.Sprite):
             for tile in monde
         )
 
+        # si sol = 0, le perso flotte donc on le descend de la taille d'une
+        # tuile pour qu'il "tombe" sur celle en dessous
         if not sol:
             self.rect.top += HAUTEUR_TUILE
 
+        # si sol = 1 et obstacle = 1 alors le perso est face à un mur donc
+        # on le monte de la hauteur d'une tuile
         if sol and obstacle:
             self.rect.top -= HAUTEUR_TUILE
 
-    def get_pos(self):
+    def get_pos(self) -> tuple:
+        """
+        Retourne simplement la position du joueur
+
+        Returns :
+            (tuple) : x et y du centre du perso
+        """
         return self.rect.center
 
 
+# Répétition de code (non propre donc à changer) pour appliquer les mêmes
+# physiques que le corps du perso mais au bras
 class Bras(pg.sprite.Sprite):
     containers: any
 

@@ -16,13 +16,19 @@ class VieGUI(pg.sprite.Sprite):
 
         self.update()
 
-        # -10 / -26 : tatonnement pour aligner correctement...
+        # -10 / -26 : tâtonnement pour aligner correctement...
         self.rect = self.image.get_rect().move(
             self.joueur.get_pos()[0] - LARGEUR_JOUEUR // 2 - 10,
             self.joueur.get_pos()[1] - HAUTEUR_JOUEUR // 2 - 26,
         )
 
     def update(self):
+        """
+        (fonction héritée de `pg.sprite.Sprite`)
+
+        Rafraichir les données affichées (si le joueur a perdu de la vie
+        entre temps)
+        """
         texte = self.texte.render(
             f"Vie: {self.joueur.vie}/100", True, self.couleur, (0, 0, 0)
         )
@@ -32,7 +38,10 @@ class VieGUI(pg.sprite.Sprite):
         self.image.blit(texte, (0, 0))
 
     def move(self):
-        # -10 / -26 : tatonnement pour aligner correctement...
+        """
+        Déplacer la jauge en meme temps que le perso
+        """
+        # -10 / -26 : tâtonnement pour aligner correctement...
         self.rect = self.image.get_rect().move(
             self.joueur.get_pos()[0] - LARGEUR_JOUEUR // 2 - 10,
             self.joueur.get_pos()[1] - HAUTEUR_JOUEUR // 2 - 26,
@@ -56,6 +65,11 @@ class ArmeGUI(pg.sprite.Sprite):
         self.rect = self.image.get_rect().move(RESOLUTION.size[0] - 150, 10)
 
     def update(self):
+        """
+        (fonction héritée de `pg.sprite.Sprite`)
+
+        Rafraichir les données affichées (si le joueur change d'arme)
+        """
         texte = self.texte.render(f"Arme: ", 0, self.couleur)
         self.image = pg.Surface(
             (texte.get_width() + 100, texte.get_height()), pg.SRCALPHA
@@ -84,6 +98,11 @@ class TourGUI(pg.sprite.Sprite):
         self.rect = self.image.get_rect().move(10, 10)
 
     def update(self):
+        """
+        (fonction héritée de `pg.sprite.Sprite`)
+
+        Rafraichir les données affichées (changement de tour)
+        """
         texte = f"Tour: joueur {self.tour}"
 
         self.image = self.texte.render(texte, 0, self.couleur)
@@ -106,13 +125,20 @@ class EnergieGUI(pg.sprite.Sprite):
 
         self.update()
 
-        # -25 / +15 : tatonnement pour aligner correctement...
+        # -25 / +15 : tâtonnement pour aligner correctement...
         self.rect = self.image.get_rect().move(
             self.joueur.get_pos()[0] - LARGEUR_JOUEUR // 2 - 25,
             self.joueur.get_pos()[1] - HAUTEUR_JOUEUR // 2 + 15,
         )
 
+        self.move()
+
     def update(self):
+        """
+        (fonction héritée de `pg.sprite.Sprite`)
+
+        Rafraichir les données affichées (si le joueur s'est déplacé)
+        """
         if self.joueur.energie < 10:
             couleur = pg.Color("Red")
         elif self.joueur.energie < 50:
@@ -132,12 +158,15 @@ class EnergieGUI(pg.sprite.Sprite):
         self.image.blit(texte, (0, 0))
 
     def move(self, ton_tour=False):
+        """
+        Déplacer la jauge en meme temps que le perso
+        """
         if ton_tour:
             self.fond_couleur = (6, 96, 14)
         else:
             self.fond_couleur = (0, 0, 0)
 
-        # -10 : tatonnement pour aligner correctement...
+        # -10 : tâtonnement pour aligner correctement...
         self.rect = self.image.get_rect().move(
             self.joueur.get_pos()[0] - LARGEUR_JOUEUR // 2 - 10,
             self.joueur.get_pos()[1] - HAUTEUR_JOUEUR // 2 - 10,
@@ -153,11 +182,8 @@ class AideGUI(pg.sprite.Sprite):
         self.texte.set_bold(1)
         self.couleur = pg.Color("Black")
 
-        self.update()
-        # -20 : tatonnement pour aligner correctement...
-        self.rect = self.image.get_rect().move(10, RESOLUTION.size[1] - 20)
-
-    def update(self):
         texte = f"A: arme précédente | Z: arme suivante | I: info sur l'arme"
-
         self.image = self.texte.render(texte, 0, self.couleur)
+
+        # -20 : tâtonnement pour aligner correctement...
+        self.rect = self.image.get_rect().move(10, RESOLUTION.size[1] - 20)

@@ -14,7 +14,7 @@ class Projectile(pg.sprite.Sprite):
     velocity: float
 
     # indice 0 : le projectile a t'il touché quelque chose ?
-    # indice 1 : est-ce un joueur que ca a touche ?
+    # indice 1 : est-ce un joueur que ca a touché ?
     hit = (0, 0,)
 
     degats: int
@@ -63,6 +63,11 @@ class Projectile(pg.sprite.Sprite):
         self.vy = self.velocity * math.sin(math.radians(self.angle))
 
     def update(self):
+        """
+        (fonction héritée de `pg.sprite.Sprite`)
+
+        Rafraichie la position du projectile à chaque frame
+        """
         if pg.sprite.collide_rect(self, self.adversaire):
             self.image = pg.transform.scale(
                 pg.image.load(self.chemin_images + "/explosion.png")

@@ -21,7 +21,18 @@ def quitter():
     quit()
 
 
-def page_game_over(_fenetre, resultat: dict):
+def page_game_over(_fenetre, resultat: dict) -> Menu:
+    """
+    Page de game over avec les stats de jeu affichées
+
+    Args :
+        _fenetre : -
+        resultat (dict) : stats de jeu retournées par la fonction mère `main`
+
+    Returns :
+        (Menu) : menu à afficher
+    """
+
     if resultat.get('vie')[1] <= 0:
         gagnant = 2
     else:
@@ -76,6 +87,16 @@ def page_game_over(_fenetre, resultat: dict):
 
 
 def page_choix_terrain(_fenetre) -> Menu:
+    """
+    Page de choix du terrain
+
+    Args :
+        _fenetre : -
+
+    Returns :
+        (Menu) : menu à afficher
+    """
+
     global niveau_choisi
     _menu = Menu(_fenetre, couleur_fond=(155, 155, 255))
 
@@ -159,6 +180,16 @@ def page_choix_terrain(_fenetre) -> Menu:
 
 
 def page_choix_theme(_fenetre) -> Menu:
+    """
+    Page de choix du niveau
+
+    Args :
+        _fenetre : -
+
+    Returns :
+        (Menu) : menu à afficher
+    """
+
     global theme_choisi
     _menu = Menu(_fenetre, couleur_fond=(155, 155, 255))
 
@@ -218,6 +249,16 @@ def page_choix_theme(_fenetre) -> Menu:
 
 
 def page_accueil(_fenetre) -> Menu:
+    """
+    Page d'accueil du jeu
+
+    Args :
+        _fenetre : -
+
+    Returns :
+        (Menu) : menu à afficher
+    """
+
     def start():
         _menu.supprime()
         return page_choix_theme(_fenetre)
