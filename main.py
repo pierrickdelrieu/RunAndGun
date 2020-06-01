@@ -45,9 +45,11 @@ def main(theme: str, id_niveau: int) -> dict:
 
     armes = [Type1, Type2, Type3]
 
+    # initialisation des jauges d'énergie
     joueur1_energie = EnergieGUI(fenetre.get_rect(), joueur1_corps)
     joueur2_energie = EnergieGUI(fenetre.get_rect(), joueur2_corps)
 
+    # initialisation des jauges de vie
     joueur1_vie = VieGUI(fenetre.get_rect(), joueur1_corps)
     joueur2_vie = VieGUI(fenetre.get_rect(), joueur2_corps)
 
@@ -58,6 +60,7 @@ def main(theme: str, id_niveau: int) -> dict:
             armes[0]],
     }
 
+    # initialisation des différentes infos affichées à l'écran
     arme_gui = ArmeGUI(theme)
     tour_gui = TourGUI()
 
@@ -66,6 +69,7 @@ def main(theme: str, id_niveau: int) -> dict:
     Type3.containers = toutes_les_images
 
     if pg.font:
+        # chargement de toutes les
         toutes_les_images.add(arme_gui)
         toutes_les_images.add(tour_gui)
 

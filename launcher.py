@@ -272,7 +272,7 @@ def page_accueil(_fenetre) -> Menu:
     _menu.ajout_texte(
         _menu.couleur_fond,
         (0, 0, 0),
-        "Projet Transverse !",
+        "Run and Gun !",
         (RESOLUTION.size[0] // 2, RESOLUTION.size[1] // 2 - 200),
         taille_police=84
     )
